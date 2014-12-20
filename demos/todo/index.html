@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>pageJS - Todo Example</title>
+        <title>jQx - Todo Example</title>
         <style type="text/css">
             .todo {
                 width: 400px;
@@ -66,7 +66,6 @@
                                 console.log(view);
                                 element.find('ul').empty();
                                 if (view.accessor(dataSource).todos.length > 0) {
-                                    //debugger;
                                     $.each(view.accessor(dataSource).todos, function (index, todo) {
                                         var item = $('<li data-x-aspect="events" data-click="updateTodoStatus" data-index="' + index + '"><input type="checkbox">' + todo.text + '</li>');
                                         if (todo.completed) {
@@ -104,7 +103,7 @@
                         view.business = {
                             todos: [
                                 {
-                                    text: 'Start Developing PageJS Demos',
+                                    text: 'Start Developing jQx Demos',
                                     completed: true
                                 },
                                 {
