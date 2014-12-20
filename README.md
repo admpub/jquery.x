@@ -1,4 +1,4 @@
-pageJS
+jQuery X Project
 ======
 
-Just a little Extensible MVVM Javascript Framework.
+The jQuery X Project. Bringing Structure and Organization To Your jQuery Project Code!
