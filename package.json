@@ -1,6 +1,6 @@
 {
     "name": "jQx",
-    "version": "1.0",
+    "version": "1.0.1",
     "dependencies": {
         "express": "4.x",
         "grunt": "~0.4.2",

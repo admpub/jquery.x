@@ -1,7 +1,7 @@
 {
     "name": "jQx",
-    "version": "1.0",
-    "main": "dist/jquery.x.min.js",
+    "version": "1.0.1",
+    "main": "dist/jQx.min.js",
     "keywords": [
         "mvvm",
         "mvc",
