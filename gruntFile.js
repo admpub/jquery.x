@@ -20,7 +20,7 @@ module.exports = function (grunt) {
                             'js/extend/aspects.js',
                             'js/aspects/events.js'
                         ],
-                        dest: 'dist/<%= pkg.name %>-<%= pkg.version %>.js'
+                        dest: 'dist/<%= pkg.name %>.js'
                     }
                 ]
 

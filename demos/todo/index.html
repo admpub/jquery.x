@@ -45,28 +45,30 @@
         <div data-x-controller="todo">
             <div class="todo">
                 <h1>Business todos</h1>
-                <div data-element="todolist" data-source="business"></div>
+                <div data-x-aspect="todolist" data-source="business"></div>
             </div>
             <div class="todo">
                 <h1>Personal todos</h1>
-                <div data-element="todolist" data-source="personal"></div>
+                <div data-x-aspect="todolist" data-source="personal"></div>
             </div>
         </div>
-        <script type="text/javascript" src="/build/pageJS-2.3.0.min.js"></script>
+        <script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
+        <script type="text/javascript" src="/dist/jQx.min.js"></script>
         <script type="text/javascript">
-            (function(page) {
-                page.ready(function() {
-                    page.element('todolist', function(controller, view, element, attributes) {
+            (function ($) {
+                $(function () {
+                    $.x.aspect(true, 'todolist', function (controller, view, element, attributes) {
                         var dataSource = ('dataSource' in attributes && attributes.dataSource) ? attributes.dataSource : false;
                         if (dataSource) {
-                            element.append('<input type="text" class="text" data-select="textbox" data-x-model="' + dataSource + '.newTodo" placeholder="New todo">');
+                            element.append('<input type="text" class="text" data-x-node="textbox" data-x-model="' + dataSource + '.newTodo" placeholder="New todo">');
                             element.append('<ul></ul>');
-                            controller.update(function() {
+                            controller.update(function () {
                                 console.log(view);
                                 element.find('ul').empty();
-                                if (!page.isEmpty(view.accessor(dataSource).todos)) {
-                                    page.forEach(view.accessor(dataSource).todos, function(todo, index) {
-                                        var item = page.selector('<li data-object="events" data-click="updateTodoStatus" data-index="' + index + '"><input type="checkbox">' + todo.text + '</li>');
+                                if (view.accessor(dataSource).todos.length > 0) {
+                                    //debugger;
+                                    $.each(view.accessor(dataSource).todos, function (index, todo) {
+                                        var item = $('<li data-x-aspect="events" data-click="updateTodoStatus" data-index="' + index + '"><input type="checkbox">' + todo.text + '</li>');
                                         if (todo.completed) {
                                             item.addClass('completed');
                                             item.find('input').attr('checked', 'checked');
@@ -78,13 +80,13 @@
                                 }
                             });
 
-                            controller.updateTodoStatus = function(event, element, attributes) {
+                            controller.updateTodoStatus = function (event, element, attributes) {
                                 var todoData = view.accessor(dataSource).todos;
                                 todoData[attributes.dataIndex].completed = (todoData[attributes.dataIndex].completed) ? false : true;
                                 view.apply();
                             };
 
-                            view.select('textbox').on('keyup', function(e) {
+                            view.node('textbox').on('keyup', function (e) {
                                 if (e.keyCode === 13) {
                                     this.blur();
                                     view.accessor(dataSource).todos.push({text: view.accessor(dataSource).newTodo, completed: false});
@@ -98,7 +100,7 @@
                         }
                     });
 
-                    page.controller('todo', function(controller, view) {
+                    $.x.controller('todo', function (controller, view) {
                         view.business = {
                             todos: [
                                 {
@@ -119,12 +121,12 @@
                             newTodo: ''
                         };
 
-                        controller.update(function() {
+                        controller.update(function () {
                             console.log(view);
                         });
                     });
                 });
-            })(page);
+            })(jQuery);
         </script>
     </body>
 </html>
