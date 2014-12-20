@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>pageJS - Todo Example</title>
+        <style type="text/css">
+            .todo {
+                width: 400px;
+                background: #ececec;
+                margin: 20px auto;
+                border: 1px solid #CEC7C7;
+            }
+            .todo h1 {
+                text-align: center;
+                margin: 0;
+                background: #444;
+                color: #ececec;
+            }
+            .todo input.text {
+                width: 96%;
+                margin: 0;
+                padding: 2%;
+                font-size: 20px;
+                border: none;
+                border-bottom: 1px dotted #CEC7C7;;
+            }
+            .todo ul {
+                list-style: none;
+                padding-left: 10px;
+            }
+            .todo ul li {
+                cursor: pointer;
+            }
+            .todo ul li:hover {
+                font-weight: bold;
+            }
+            .todo li.completed {
+                text-decoration: line-through;
+            }
+        </style>
+    </head>
+    <body>
+        <div data-x-controller="todo">
+            <div class="todo">
+                <h1>Business todos</h1>
+                <div data-element="todolist" data-source="business"></div>
+            </div>
+            <div class="todo">
+                <h1>Personal todos</h1>
+                <div data-element="todolist" data-source="personal"></div>
+            </div>
+        </div>
+        <script type="text/javascript" src="/build/pageJS-2.3.0.min.js"></script>
+        <script type="text/javascript">
+            (function(page) {
+                page.ready(function() {
+                    page.element('todolist', function(controller, view, element, attributes) {
+                        var dataSource = ('dataSource' in attributes && attributes.dataSource) ? attributes.dataSource : false;
+                        if (dataSource) {
+                            element.append('<input type="text" class="text" data-select="textbox" data-x-model="' + dataSource + '.newTodo" placeholder="New todo">');
+                            element.append('<ul></ul>');
+                            controller.update(function() {
+                                console.log(view);
+                                element.find('ul').empty();
+                                if (!page.isEmpty(view.accessor(dataSource).todos)) {
+                                    page.forEach(view.accessor(dataSource).todos, function(todo, index) {
+                                        var item = page.selector('<li data-object="events" data-click="updateTodoStatus" data-index="' + index + '"><input type="checkbox">' + todo.text + '</li>');
+                                        if (todo.completed) {
+                                            item.addClass('completed');
+                                            item.find('input').attr('checked', 'checked');
+                                        }
+                                        element.find('ul').append(item);
+                                    });
+                                } else {
+                                    element.find('ul').append('<li>No todos</li>');
+                                }
+                            });
+
+                            controller.updateTodoStatus = function(event, element, attributes) {
+                                var todoData = view.accessor(dataSource).todos;
+                                todoData[attributes.dataIndex].completed = (todoData[attributes.dataIndex].completed) ? false : true;
+                                view.apply();
+                            };
+
+                            view.select('textbox').on('keyup', function(e) {
+                                if (e.keyCode === 13) {
+                                    this.blur();
+                                    view.accessor(dataSource).todos.push({text: view.accessor(dataSource).newTodo, completed: false});
+                                    view.accessor(dataSource).newTodo = '';
+                                    view.apply();
+                                    this.focus();
+                                }
+                            });
+                        } else {
+                            element.append('<p>No Data Source Found</p>');
+                        }
+                    });
+
+                    page.controller('todo', function(controller, view) {
+                        view.business = {
+                            todos: [
+                                {
+                                    text: 'Start Developing PageJS Demos',
+                                    completed: true
+                                },
+                                {
+                                    text: 'Complete The Todo Demo',
+                                    completed: false
+                                }
+
+                            ],
+                            newTodo: ''
+                        };
+
+                        view.personal = {
+                            todos: [],
+                            newTodo: ''
+                        };
+
+                        controller.update(function() {
+                            console.log(view);
+                        });
+                    });
+                });
+            })(page);
+        </script>
+    </body>
+</html>
