@@ -1,11 +1,12 @@
 {
-    "name": "jQx",
+    "name": "jquery.x",
     "version": "1.0.1",
-    "main": "dist/jQx.min.js",
+    "main": "dist/jquery.x.min.js",
     "keywords": [
         "mvvm",
         "mvc",
-        "jQx"
+        "jquery.x",
+        "jquery"
     ],
     "ignore": [],
     "dependencies": {
