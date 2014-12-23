@@ -32,7 +32,7 @@ Now that we have our controller defined and our DOM node bound, lets play with s
     	<p>Hello My Name Is: <span data-x-bind="name"></span></p>
 	</div>
 
-[View Results](http://jsfiddle.net/jjLabs/2tqu3bm2/3/)
+[View Results](http://jsfiddle.net/jljLabs/2tqu3bm2/3/)
 
 ##License
 MIT license - [http://www.opensource.org/licenses/mit-license.php](http://www.opensource.org/licenses/mit-license.php "MIT license")
