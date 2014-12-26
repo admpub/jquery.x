@@ -40,8 +40,6 @@ MVVM is a modern interpretation of your traditional MVC, but with a twist. In a 
 
 ## X Overview
 
-
-
 ## The X Object
 
 ## The Controller Object
@@ -57,6 +55,12 @@ MVVM is a modern interpretation of your traditional MVC, but with a twist. In a 
 ## Extending X
 
 ## Library API Documentation
+
+##Acknowledgements
+
+This library was the brain child of [Joshua L Johnson](https://github.com/joshualjohnson "Joshua L Johnson"), [Jake Quattrocchi](https://github.com/globaljake "Jake Quattrocchi"), and [Arian Caraballo](https://www.linkedin.com/pub/arian-caraballo/33/3a2/40bhttps://www.linkedin.com/pub/arian-caraballo/33/3a2/40b "Arian Caraballo")
+
+Special thanks to both Jake and Arian for all of the hours of your personal time brain storming critical components of **X**.
 
 ## License
 MIT license - [http://www.opensource.org/licenses/mit-license.php](http://www.opensource.org/licenses/mit-license.php "MIT license")
