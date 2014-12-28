@@ -61,6 +61,16 @@ jQuery.x is an MVVM library built around 4 basic components. These components wo
 
 ## The X Object
 
+The X Object is where it all begins. X is responsible for providing MVVM to your jQuery project. After you include the jQuery.x library into your project it becomes a part of jQuery and is available through:
+
+	jQuery.x
+
+or
+
+	$.x
+
+You will mostly use this object to register and define application components. Like your controllers, aspects, and filters.
+
 ## The Controller Object
 
 ## The View Object
