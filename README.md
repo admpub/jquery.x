@@ -84,15 +84,38 @@ You will mostly use this object to register and define your application componen
 
 ## The Controller Object
 
+**Purpose and Use**
+
 The Controller is where all of the business logic exists. You will use the controller to wrap all of your application specific interactions. A Controller in X binds your view to a specific region of the DOM. To register a controller you need to define a controller definition:
 
 	$.x.controller('controllerId', function(controller, view){});
 
-The definition above defines an empty controller. Notice that when you define a controller, you get back the `controller` and `view` parameters in your controller definition. These two objects gives you direct access to the both the Controller and the View Model.
+The definition above defines an empty controller. Notice that when you define a controller, you get back the `controller` and `view` objects in your controller definition constructor. These two objects gives you direct access to the both the Controller and the View Model.
 
-Once you have a controller definition, you need to bind it to the view using the attribute `data-x-controller`.
+Once you have a controller definition, you need to bind it to the view using the attribute `data-x-controller="controllerId"`.
 
-Now that you have the Controller bound to the View you will use the controller to manage your View by changing data in your View Model.
+Now that you have the Controller bound to the View you should use the controller to manage your View by changing data in your View Model only. You should never directly manipulate the View within the controller unless it is done within your Controller's `update` method. 
+
+**Controller Prototype Inheritance**
+
+Each Controller created inherits its root properties from a base abstract controller object that lives in `$.x._abstractController`. For the following example, we will take a look at a single controller instance:
+
+	<div data-x-controller="controller1"></div>
+
+In the example above the controller we have defined inherits from the abstractController `$.x._abstractController`:
+
+	controller1 inherits from $.x._abstractController
+
+Controllers can also be nested. Below is an example of how nested controllers inherit from one another:
+
+	<div data-x-controller="parentController">
+		<div data-x-controller="childController"></div>
+	</div>
+
+In an instance where you have controllers that are nested, child controllers will inherit the properties of a parent controller:
+
+	childController inherits from parentController
+	parentController inherits from $.x._abstractController
 
 ## The View Object
 
@@ -108,7 +131,11 @@ Now that you have the Controller bound to the View you will use the controller t
 
 ## Extending X
 
+## Library View Attributes
+
 ## Library API Documentation
+
+## Library Included Aspects
 
 ##Acknowledgements
 
