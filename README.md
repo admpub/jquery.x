@@ -69,9 +69,30 @@ or
 
 	$.x
 
-You will mostly use this object to register and define application components. Like your controllers, aspects, and filters.
+You will mostly use this object to register and define your application components. Like your Controllers, Aspects, Filters, and Custom Events.
+	
+	//register a Controller
+	$.x.controller('controllerId', function(controller, view){});
+	//register an Aspect
+	$.x.aspect('aspectId', function(element, attributes){});
+	//register a Filter
+	$.x.aspect('filterId', function(value){});
+	//register an event
+	$.x.on('eventId', function(eventObj){});
+	//trigger an event
+	$.x.broadcast('eventId');
 
 ## The Controller Object
+
+The Controller is where all of the business logic exists. You will use the controller to wrap all of your application specific interactions. A Controller in X binds your view to a specific region of the DOM. To register a controller you need to define a controller definition:
+
+	$.x.controller('controllerId', function(controller, view){});
+
+The definition above defines an empty controller. Notice that when you define a controller, you get back the `controller` and `view` parameters in your controller definition. These two objects gives you direct access to the both the Controller and the View Model.
+
+Once you have a controller definition, you need to bind it to the view using the attribute `data-x-controller`.
+
+Now that you have the Controller bound to the View you will use the controller to manage your View by changing data in your View Model.
 
 ## The View Object
 
@@ -80,6 +101,10 @@ You will mostly use this object to register and define application components. L
 ## Controller's Update Function
 
 ## Aspects
+
+## Custom Events
+
+## Filters
 
 ## Extending X
 
