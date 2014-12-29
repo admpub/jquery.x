@@ -119,6 +119,18 @@ In an instance where you have controllers that are nested, child controllers wil
 
 ## The View Object
 
+**Purpose and Use**
+
+The View Object, also known as the View Model, is meant to maintain the "state" of the view. When we describe state, we are talking about storing all of the data that makes up the view. For example, if we want to hide and show an element in the view, we can represent its hide/show state with a true and false property on the View Object.
+
+A View Object is created when a Controller is created. In other words, every Controller has a View.
+
+**View Prototype Inheritance**
+
+Just like a Controller, each View Object created inherits its root properties from an abstract view object that lives in `$.x._abstractView`.
+
+Also just like a Controller, if a View is nested within another View, the child View Object will inherit its properties from its parent View Object.
+
 ## The Apply Loop
 
 ## Controller's Update Function
@@ -132,6 +144,26 @@ In an instance where you have controllers that are nested, child controllers wil
 ## Extending X
 
 ## Library View Attributes
+
+* **data-x-controller** - This attribute is used to bind a controller to its definition. As a value it is expected the ID of the controller definition you want to bind the DOM node to.
+
+		<div data-x-controller="controllerId"></div>
+
+* **data-x-bind** - This attribute is used to bind the value of a property in a View Object to the view itself. As a value it is expecting the dot-notation path to the property you want to bind it to.
+
+		<span data-x-bind="path.to.property"></span>
+
+* **data-x-model** - This attribute is used to create a two-way bind between the View and the View Object. It should only be used on form fields supported by the HTML5 spec. As a value it is expecting the dot-notation path to the property you want to bind it to.
+
+		<input type="text" data-x-model="path.to.property" />
+
+* **data-x-filter** - This attribute is responsible for binding a filter definition to the View. A filter should only be applied where there is a need to manipulate the value of a bound property of the View Object you will be displaying. Filters will only work with values bound by `data-x-bind`. The value it is expecting is the ID of the filter you want to apply.
+
+		<span data-x-bind="value" data-x-filter="filterId"></span>
+
+* **data-x-node** - This attribute is used to make specific elements available to the View Object using the `view.node('nodeId')` method, where `'nodeId'` is the value you provide in this attribute.
+
+		<div data-x-node="nodeId"></div>
 
 ## Library API Documentation
 
