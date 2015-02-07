@@ -66,7 +66,7 @@
                 }
                 //determine if controllers defined
                 if (!this.isController(controllerId)) {
-                    //if not defined make sure that it has a binding 
+                    //if not defined make sure that it has a binding
                     //data-x-controller="controllerId" in the dom markup
                     var controllerDom = $('[data-x-controller="' + controllerId + '"]');
                     if (controllerDom.length === 0) {
@@ -127,9 +127,13 @@
                         ' ________  | |/ /    / _ |  __/|  __/ _ `|  __|  ________\n' +
                         '/___/___/   >  <    |  __/ |   | | | (_) | |    /___/___/\n' +
                         '           /_/|_|    |___|_|   |_| |____/|_|\n';
-                console.debug(errorHeading);
+                if (window.console && console.debug) {
+                    console.debug(errorHeading);
+                }
                 var error = new Error(message);
-                console.log(error.stack);
+                if (window.console && console.log) {
+                    console.log(error.stack);
+                }
                 return error;
             }
         };

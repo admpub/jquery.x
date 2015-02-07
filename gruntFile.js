@@ -49,9 +49,22 @@ module.exports = function (grunt) {
                     document: true
                 }
             }
-        }
+        },
+        connect: {
+            server: {
+              options: {
+                port: 8000,
+                base: '.',
+                keepalive: true,
+                open: {
+                    target: 'http://localhost:8000/demos/todo/index.html'
+                }
+              }
+            }
+          }
     });
 
+    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-concat');
@@ -59,5 +72,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', ['clean', 'concat']);
     grunt.registerTask('cleaner', ['clean']);
+    grunt.registerTask('demo', ['connect']);
     grunt.registerTask('build', ['clean', 'jshint', 'concat', 'uglify']);
 };
