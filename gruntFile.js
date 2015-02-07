@@ -72,6 +72,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', ['clean', 'concat']);
     grunt.registerTask('cleaner', ['clean']);
-    grunt.registerTask('demo', ['connect'])
+    grunt.registerTask('demo', ['connect']);
     grunt.registerTask('build', ['clean', 'jshint', 'concat', 'uglify']);
 };
