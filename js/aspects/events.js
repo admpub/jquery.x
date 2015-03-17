@@ -8,8 +8,9 @@
                 var attrs = attributes;
                 object.on('click.x', function (e) {
                     var controller = $.x.controller($.x._myController(node));
-                    if (controller[method]) {
-                        controller[method](e, obj, attrs);
+                    var callMethod = controller.accessor(method);
+                    if ($.type(callMethod) === $.x.type.function) {
+                        callMethod(e, obj, attrs);
                     }
                 });
             }

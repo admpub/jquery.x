@@ -66,7 +66,7 @@
                 <div class="testSquare gold" data-x-controller="click">
                     <b>Click Tests</b>
                     <div style="float:left; width: 100%;">
-                        <div style="width: 75px; height: 75px; background: grey; float:left; cursor: pointer;" data-x-aspect="events" data-click="clicked">
+                        <div style="width: 75px; height: 75px; background: grey; float:left; cursor: pointer;" data-x-aspect="events" data-click="test.clicked">
                             Click Here!
                         </div>
                         <h3 data-x-node="message" style="width: 100%; float:left;color: red;">Click Successful!</h3>
@@ -97,6 +97,7 @@
         <!--controller extensions -->
         <script type="text/javascript" src="/js/extend/controller/parent.js"></script>
         <script type="text/javascript" src="/js/extend/controller/children.js"></script>
+        <script type="text/javascript" src="/js/extend/controller/accessor.js"></script>
 
         <!--view extensions -->
         <script type="text/javascript" src="/js/extend/view/parent.js"></script>
@@ -145,14 +146,15 @@
                             }
                         });
 
-                        controller.clicked = function (event, element, attributes) {
-                            view.btnClicked = true;
-                            view.apply();
+                        controller.test = {
+                            clicked: function (event, element, attributes) {
+                                view.btnClicked = true;
+                                view.apply();
+                            }
                         };
                     });
                 });
-            })(jQuery);
-        </script>
+            })(jQuery);</script>
 
         <!--Aspects W/ Controller Check-->
         <script type="text/javascript">

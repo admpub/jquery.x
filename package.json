@@ -1,6 +1,6 @@
 {
   "name": "jquery.x",
-  "version": "1.0.2",
+  "version": "1.2.0",
   "dependencies": {
     "express": "4.x",
     "grunt": "~0.4.2",

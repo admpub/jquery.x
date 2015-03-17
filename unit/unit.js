@@ -206,6 +206,31 @@
         });
 
         /*
+         * controller.accessor() Accesses the controller to either set a property or get a property
+         */
+        qunit.test('controller.accessor(property, value)', function (assert) {
+            var controller = $.x.controller('element1Node');
+            var view = controller;
+            assert.ok(view.accessor({}) instanceof Error, 'Check Error For Non-String as Property');
+            view.accessor('unit.test', 'passed');
+            assert.ok(view.unit.test === 'passed', 'Property On View Model Set Properly Check');
+            assert.ok(view.accessor('unit.test') === 'passed', 'Property On View Model Get Properly Check');
+            //check index notation
+            view.unit = {
+                test: [
+                    {test: 1},
+                    {test: 2}
+                ]
+            };
+            assert.ok(view.accessor('unit.test.1.test') === 2, 'Accessor Accessed Property of Array');
+            view.accessor('unit.test.0.test', 'Updated');
+            assert.ok(view.unit.test[0].test === 'Updated', 'Access Updated Property of Array');
+            view.accessor('parent().unit.test', 'Passed');
+            assert.ok($.x.controller('parentNode').unit.test === 'Passed', 'Accessor Setting Property on Parent View Using parent() Notation');
+            assert.ok(view.accessor('parent().unit.test') === 'Passed', 'Acccessor Accessed Property of Parent View');
+        });
+
+        /*
          * view.apply() Runs the apply loop to update the view
          */
         qunit.test('view.apply()', function (assert) {
