@@ -57,7 +57,7 @@
         <script type="text/javascript">
             (function ($) {
                 $(function () {
-                    $.x.aspect(true, 'todolist', function (controller, view, element, attributes) {
+                    $.x.aspect('todolist', true, function (controller, view, element, attributes) {
                         var dataSource = ('dataSource' in attributes && attributes.dataSource) ? attributes.dataSource : false;
                         if (dataSource) {
                             element.append('<input type="text" class="text" data-x-node="textbox" data-x-model="' + dataSource + '.newTodo" placeholder="New todo">');
@@ -67,7 +67,7 @@
                                 element.find('ul').empty();
                                 if (view.accessor(dataSource).todos.length > 0) {
                                     $.each(view.accessor(dataSource).todos, function (index, todo) {
-                                        var item = $('<li data-x-aspect="events" data-click="updateTodoStatus" data-index="' + index + '"><input type="checkbox">' + todo.text + '</li>');
+                                        var item = $('<li data-x-aspect="x" data-click="updateTodoStatus" data-index="' + index + '"><input type="checkbox">' + todo.text + '</li>');
                                         if (todo.completed) {
                                             item.addClass('completed');
                                             item.find('input').attr('checked', 'checked');

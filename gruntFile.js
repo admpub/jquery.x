@@ -18,7 +18,7 @@ module.exports = function (grunt) {
                             'js/extend/view/**/*.js',
                             'js/extend/mvvm.js',
                             'js/extend/aspects.js',
-                            'js/aspects/events.js'
+                            'js/aspects/**/*.js'
                         ],
                         dest: 'dist/<%= pkg.name %>.js'
                     }
@@ -52,16 +52,16 @@ module.exports = function (grunt) {
         },
         connect: {
             server: {
-              options: {
-                port: 8000,
-                base: '.',
-                keepalive: true,
-                open: {
-                    target: 'http://localhost:8000/demos/todo/index.html'
+                options: {
+                    port: 8000,
+                    base: '.',
+                    keepalive: true,
+                    open: {
+                        target: 'http://localhost:8000/demos/todo/index.html'
+                    }
                 }
-              }
             }
-          }
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-connect');

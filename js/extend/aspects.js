@@ -5,17 +5,17 @@
         });
 
         $.x.extend.x('aspect', function () {
-            //$.x.aspect([hasOwnController], id, initHandler)
+            //$.x.aspect(id,[hasOwnController], initHandler)
             //$.x.aspect(id, initHandler)
             return function (a, b, c) {
                 var hasOwnController, aspectName, initHandler;
-                if ($.type(a) === $.x.type.boolean) {
-                    hasOwnController = a;
-                    aspectName = b;
+                if ($.type(b) === $.x.type.boolean) {
+                    aspectName = a;
+                    hasOwnController = b;
                     initHandler = c;
                 } else {
-                    hasOwnController = false;
                     aspectName = a;
+                    hasOwnController = false;
                     initHandler = b;
                 }
                 if ($.type(aspectName) !== $.x.type.string || !aspectName) {

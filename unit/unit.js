@@ -151,20 +151,6 @@
             });
             assert.ok($.type($.x._aspects.test.handler) === $.x.type.function, 'Function Closure Stored Check');
         });
-//
-//        /*
-//         * page.object() creates a bundled package to apply elements objects on the page.
-//         */
-//        qunit.test('page.object(objectName, initFunction)', function (assert) {
-//            assert.ok(page._objects, 'page._objects Property Exists on Page Object');
-//            assert.ok(page.isFunction(page.object), 'Page Object Method Is Function Check');
-//            assert.ok(page.object('', function () {
-//            }) instanceof Error, 'Empty String Element Name Check');
-//            assert.ok(page.object('test', 'test') instanceof Error, 'initFunction Function Check');
-//            page.object('test', function () {
-//            });
-//            assert.ok(page.isFunction(page._objects.test), 'Function Closure Stored Check');
-//        });
 
         /*
          * controller._dom() Gets the DOM of the controller

@@ -565,17 +565,17 @@
         });
 
         $.x.extend.x('aspect', function () {
-            //$.x.aspect([hasOwnController], id, initHandler)
+            //$.x.aspect(id,[hasOwnController], initHandler)
             //$.x.aspect(id, initHandler)
             return function (a, b, c) {
                 var hasOwnController, aspectName, initHandler;
-                if ($.type(a) === $.x.type.boolean) {
-                    hasOwnController = a;
-                    aspectName = b;
+                if ($.type(b) === $.x.type.boolean) {
+                    aspectName = a;
+                    hasOwnController = b;
                     initHandler = c;
                 } else {
-                    hasOwnController = false;
                     aspectName = a;
+                    hasOwnController = false;
                     initHandler = b;
                 }
                 if ($.type(aspectName) !== $.x.type.string || !aspectName) {
@@ -660,17 +660,16 @@
 })(jQuery);
 (function ($) {
     $(function () {
-        $.x.aspect('events', function (object, attributes) {
+        $.x.aspect('x', function (element, attributes) {
             if (attributes.dataClick) {
                 var method = attributes.dataClick;
-                var node = object[0];
-                var obj = object;
+                var node = element[0];
                 var attrs = attributes;
-                object.on('click.x', function (e) {
+                element.on('click.x', function (e) {
                     var controller = $.x.controller($.x._myController(node));
                     var callMethod = controller.accessor(method);
                     if ($.type(callMethod) === $.x.type.function) {
-                        callMethod(e, obj, attrs);
+                        callMethod(e, element, attrs);
                     }
                 });
             }
