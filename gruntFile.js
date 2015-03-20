@@ -16,8 +16,8 @@ module.exports = function (grunt) {
                             'js/extend/x/**/*.js',
                             'js/extend/controller/**/*.js',
                             'js/extend/view/**/*.js',
-                            'js/extend/mvvm.js',
-                            'js/extend/aspects.js',
+                            'js/extend/plugins/mvvm.js',
+                            'js/extend/plugins/aspects.js',
                             'js/aspects/**/*.js'
                         ],
                         dest: 'dist/<%= pkg.name %>.js'

@@ -375,6 +375,315 @@
 })(jQuery);
 (function ($) {
     $(function () {
+        /*
+         * Extend the controller object to add the update functionality
+         */
+        $.x.extend.controller('_update', function () {
+            return function () {
+                return;
+            };
+        });
+
+        $.x.extend.controller('update', function () {
+            return function (updateHandler) {
+                this._update = updateHandler;
+            };
+        });
+
+        /*
+         * Extend the view object to add apply loop capabilities
+         */
+        $.x.extend.view('_applyBefore', function () {
+            return [];
+        });
+
+        $.x.extend.view('_apply', function () {
+            return [];
+        });
+
+        $.x.extend.view('apply', function () {
+            return function () {
+                var controller = $.x.controller(this._id);
+                $.each(this._applyBefore, function (i, applyFunction) {
+                    if ($.type(applyFunction) === $.x.type.function) {
+                        applyFunction(controller, controller._view);
+                    }
+                });
+                controller._update();
+                $.each(this._apply, function (i, applyFunction) {
+                    if ($.type(applyFunction) === $.x.type.function) {
+                        applyFunction(controller, controller._view);
+                    }
+                });
+
+                var childrenControllers = controller.children();
+                if (childrenControllers) {
+                    $.each(childrenControllers, function (i, childController) {
+                        childController._view.apply();
+                    });
+                }
+            };
+        });
+
+        /*
+         * Add the ability to extend the apply loop
+         * $.x.extend.apply([applyBeforeUpdate], applyFunction);
+         * $.x.extend.apply(applyFunction);
+         */
+        $.x.extend.apply = function (a, b) {
+            var applyBeforeUpdate, applyFunction;
+            if ($.type(a) === $.x.type.boolean) {
+                applyBeforeUpdate = a;
+                applyFunction = b;
+            } else {
+                applyBeforeUpdate = false;
+                applyFunction = a;
+            }
+
+            if ($.type(applyFunction) !== $.x.type.function) {
+                return $.x.error('Apply function must be a function');
+            }
+
+            if (applyBeforeUpdate) {
+                $.x._abstractView._applyBefore.push(applyFunction);
+            } else {
+                $.x._abstractView._apply.push(applyFunction);
+            }
+        };
+
+
+        /*
+         * Extended x to handle filter registration
+         */
+        $.x.extend.x('_filters', function () {
+            return {};
+        });
+
+        $.x.extend.x('filter', function () {
+            return function (filterName, filterHandler) {
+                if ($.type(filterName) !== $.x.type.string || !filterName) {
+                    $.x.error('Filter name must be a string');
+                }
+                if ($.type(filterHandler) !== $.x.type.function) {
+                    $.x.error('Filter handler must be a function');
+                }
+
+                this._filters[filterName] = filterHandler;
+            };
+        });
+
+        /**
+         * Extend the controller to manage keep track of its bindings.
+         */
+        $.x.extend.controller('_binds', function () {
+            return function () {
+                var controller = this;
+                var binds = new $();
+                controller._dom().find('[data-x-bind], [data-x-model]').each(function () {
+                    var bindElem = this;
+                    if ($.x._myController(bindElem) === controller._id) {
+                        binds.push(bindElem);
+                    }
+                });
+                return binds;
+            };
+        });
+
+        $.x.extend.controller('_models', function () {
+            return function () {
+                var controller = this;
+                var models = new $();
+                controller._dom().find('[data-x-model]:not(.x-mvvm)').each(function () {
+                    var modelElem = this;
+                    if ($.x._myController(modelElem) === controller._id) {
+                        models.push(modelElem);
+                    }
+                });
+                return models;
+            };
+        });
+
+        /*
+         * Extend Apply to manage bindings
+         */
+        $.x.extend.apply(function (controller, view) {
+            var models = controller._models();
+            if (models.length > 0) {
+                models.on('change.x keyup.x', function () {
+                    if (this.tagName === 'INPUT' && (this.type === 'text' || this.type === 'password')) {
+                        if ($(this).data('val') !== this.value) {
+                            view.accessor($(this).attr('data-x-model'), this.value);
+                            view.apply();
+                        }
+                        $(this).data('val', this.value);
+                    } else {
+                        var bindValue;
+                        if (this.tagName === 'INPUT' && this.type === 'checkbox') {
+                            bindValue = this.checked;
+                        } else {
+                            bindValue = this.value;
+                        }
+                        view.accessor($(this).attr('data-x-model'), bindValue);
+                        view.apply();
+                    }
+
+                });
+                models.addClass('x-mvvm');
+            }
+            //apply bindings values
+            controller._binds().each(function () {
+                var binding = this;
+                //get the element
+                var elem = $(binding);
+                //find out what type of element we are trying to set
+                var elemType = binding.tagName;
+                //get the property of the viewModel
+                var bindProp = (elem.attr('data-x-bind')) ? elem.attr('data-x-bind') : elem.attr('data-x-model');
+                //get the value of the property of the viewModel
+                var bindValue;
+                var bindVal = view.accessor(bindProp);
+                if (elem.attr('data-x-filter') && $.type($.x._filters[elem.attr('data-x-filter')]) === $.x.type.function && !elem.attr('data-x-model')) {
+                    bindValue = $.x._filters[elem.attr('data-x-filter')](bindVal);
+                } else {
+                    bindValue = bindVal;
+                }
+                //set the value of the binding
+                if (!elem.is(':focus')) {
+                    switch (elemType) {
+                        case 'INPUT':
+                            if (elem.attr('type') === 'radio') {
+                                if (elem.val() === bindValue) {
+                                    elem.prop('checked', true);
+                                } else {
+                                    elem.prop('checked', false);
+                                }
+                            } else if (elem.attr('type') === 'checkbox') {
+                                if (bindValue) {
+                                    elem.prop('checked', true);
+                                } else {
+                                    elem.prop('checked', false);
+                                }
+                            } else {
+                                elem.val(bindValue);
+                            }
+                            break;
+                        case 'SELECT':
+                            elem.val(bindValue);
+                            break;
+                        case 'TEXTAREA':
+                            elem.val(bindValue);
+                            break;
+                        default:
+                            elem.html(bindValue);
+                            break;
+                    }
+                }
+            });
+        });
+    });
+})(jQuery);
+(function ($) {
+    $(function () {
+        $.x.extend.x('_aspects', function () {
+            return {};
+        });
+
+        $.x.extend.x('aspect', function () {
+            //$.x.aspect(id,[hasOwnController], initHandler)
+            //$.x.aspect(id, initHandler)
+            return function (a, b, c) {
+                var hasOwnController, aspectName, initHandler;
+                if ($.type(b) === $.x.type.boolean) {
+                    aspectName = a;
+                    hasOwnController = b;
+                    initHandler = c;
+                } else {
+                    aspectName = a;
+                    hasOwnController = false;
+                    initHandler = b;
+                }
+                if ($.type(aspectName) !== $.x.type.string || !aspectName) {
+                    return this.error('Aspect name must be a string');
+                }
+
+                if ($.type(initHandler) !== $.x.type.function) {
+                    return this.error('Aspect initHandler must be a function');
+                }
+
+                this._aspects[aspectName] = {
+                    controller: hasOwnController,
+                    handler: initHandler
+                };
+            };
+        });
+
+        $.x.extend.apply(function (controller, view) {
+            var getAttributes = function (domNode) {
+                var attributes = {};
+                $.each(domNode.attributes, function () {
+                    if (this.specified) {
+                        var property = this.name.replace(/\W+(.)/g, function (x, chr) {
+                            return chr.toUpperCase();
+                        });
+                        attributes[property] = this.value;
+                    }
+                });
+                return attributes;
+            };
+            //get all of the aspects
+            var aspects = controller._dom().find('[data-x-aspect]:not(.x-aspect)');
+            if (aspects && aspects.length > 0) {
+                var reApply = false;
+                $.each(aspects, function (i, aspect) {
+                    if ($.x._myController(aspect) === controller._id) {
+                        //let the apply loop know that this aspect is already queued up
+                        $(aspect).addClass('x-aspect');
+                        var aspectNames = $(aspect).attr('data-x-aspect').split(' ');
+                        $.each(aspectNames, function (i, aspectName) {
+                            //check to see if aspect was defined
+                            if (!$.x._aspects[aspectName]) {
+                                return $.x.error('The Aspect "' + aspectName + '" is not defined');
+                            }
+
+                            //determine if aspect was configured with controller
+                            if ($.x._aspects[aspectName].controller) {
+                                var aspectControllerId;
+                                var aspectController;
+                                //make sure there is not already a controller on this aspect.
+                                if ($(aspect).attr('data-x-controller')) {
+                                    aspectControllerId = $(aspect).attr('data-x-controller');
+                                } else {
+                                    aspectControllerId = 'E' + Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+                                    $(aspect).attr('data-x-controller', aspectControllerId);
+                                }
+                                //get the controller
+                                aspectController = $.x.controller(aspectControllerId);
+                                $.x._aspects[aspectName].handler(aspectController, aspectController._view, $(aspect), getAttributes(aspect));
+                            } else {
+                                reApply = true;
+                                $.x._aspects[aspectName].handler($(aspect), getAttributes(aspect));
+                            }
+                        });
+
+
+                    }
+                });
+                //if aspect is one without a controller we need
+                //to run the controller's update function to apply
+                //the changes of this addition
+                if (reApply) {
+                    $.each(controller._view._apply, function (i, applyFunction) {
+                        if ($.type(applyFunction) === $.x.type.function) {
+                            applyFunction(controller, controller._view);
+                        }
+                    });
+                }
+            }
+        });
+    });
+})(jQuery);
+(function ($) {
+    $(function () {
         $.x.aspect('x', function (element, attributes) {
             if (attributes.dataClick) {
                 var method = attributes.dataClick;
