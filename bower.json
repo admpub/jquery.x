@@ -1,6 +1,6 @@
 {
     "name": "jquery.x",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "main": "dist/jquery.x.min.js",
     "keywords": [
         "mvvm",
