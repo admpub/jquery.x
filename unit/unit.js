@@ -74,6 +74,17 @@
         });
 
         /*
+         * $.x.extend.apply(applyAfterUpdate, applyFunction) Extends the page object.
+         */
+        qunit.test('$.x.extend.apply(applyBeforeUpdate, applyFunction)', function (assert) {
+            assert.ok($.x.extend.apply() instanceof Error, 'Empty Extension Name Check');
+            $.x.extend.apply(true, function () {
+                return 'passed';
+            });
+            assert.ok($.x._abstractView._applyBefore[$.x._abstractView._applyBefore.length - 1] && $.x._abstractView._applyBefore[$.x._abstractView._applyBefore.length - 1]() === 'passed', 'Apply Extensions Applied Correctly Check');
+        });
+
+        /*
          * $.x.controller() creates a controller and returns it
          */
         qunit.test('$.x.controller(controllerId, initHandler)', function (assert) {

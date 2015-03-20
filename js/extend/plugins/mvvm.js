@@ -18,6 +18,10 @@
         /*
          * Extend the view object to add apply loop capabilities
          */
+        $.x.extend.view('_applyBefore', function () {
+            return [];
+        });
+
         $.x.extend.view('_apply', function () {
             return [];
         });
@@ -25,6 +29,11 @@
         $.x.extend.view('apply', function () {
             return function () {
                 var controller = $.x.controller(this._id);
+                $.each(this._applyBefore, function (i, applyFunction) {
+                    if ($.type(applyFunction) === $.x.type.function) {
+                        applyFunction(controller, controller._view);
+                    }
+                });
                 controller._update();
                 $.each(this._apply, function (i, applyFunction) {
                     if ($.type(applyFunction) === $.x.type.function) {
@@ -43,13 +52,28 @@
 
         /*
          * Add the ability to extend the apply loop
+         * $.x.extend.apply([applyBeforeUpdate], applyFunction);
+         * $.x.extend.apply(applyFunction);
          */
-        $.x.extend.apply = function (applyFunction) {
+        $.x.extend.apply = function (a, b) {
+            var applyBeforeUpdate, applyFunction;
+            if ($.type(a) === $.x.type.boolean) {
+                applyBeforeUpdate = a;
+                applyFunction = b;
+            } else {
+                applyBeforeUpdate = false;
+                applyFunction = a;
+            }
+
             if ($.type(applyFunction) !== $.x.type.function) {
                 return $.x.error('Apply function must be a function');
             }
 
-            $.x._abstractView._apply.push(applyFunction);
+            if (applyBeforeUpdate) {
+                $.x._abstractView._applyBefore.push(applyFunction);
+            } else {
+                $.x._abstractView._apply.push(applyFunction);
+            }
         };
 
 
