@@ -44,7 +44,7 @@ X and Angular are very similar in the implementation of MVVM. When we originally
 
 X differs from Angular in many distinct ways:
 
-* **No Dependency Injection** Although this is one of the best Design Patterns for developing very large enterprise applications, we decided not to include it within X because we are not targeting large enterprise application development. 
+* **No Dependency Injection** Although this is one of the best Design Patterns for developing very large enterprise applications, we decided not to include it within X because we are not targeting large enterprise application development.
 * **Clearer Separation of View and Controller** The Controller in Angular is merely a definition and not so an object. So you cannot add methods to it. Instead, you are forced to add methods to your View Model. Your View Model is then responsible for both State and Business Logic. X has solved this problem by providing a Controller object separate from a View object directly in the controller definition.
 * **DOM Manipulation Based MVVM** Angular provides View updates through the use of template logi,c defined within Directives, in the template. X has provided a way to define DOM Manipulation logic within the Apply Loop for each Controller separately. Each controller has an Update Function that runs when the Apply Loop is invoked where all of your DOM Manipulation will happen based on your View Model state.
 * **Easier Library Extensions** Angular has made a way to extend the library through Service Providers and Dependency Injection. Extending Angular can become very difficult to understand because of the number of options they provide as you extend the library. You can extend Angular with a Service, Provider, Factory, Filter, etc. There are a number of blog posts out there to try and help you define which to use and why. X provides you direct access to extend the four primary components with one configuration interface.
@@ -70,7 +70,7 @@ or
 	$.x
 
 You will mostly use this object to register and define your application components. Like your Controllers, Aspects, Filters, and Custom Events.
-	
+
 	//register a Controller
 	$.x.controller('controllerId', function(controller, view){});
 	//register an Aspect
@@ -94,7 +94,7 @@ The definition above defines an empty controller. Notice that when you define a 
 
 Once you have a controller definition, you need to bind it to the view using the attribute `data-x-controller="controllerId"`.
 
-Now that you have the Controller bound to the View you should use the controller to manage your View by changing data in your View Model only. You should never directly manipulate the View within the controller unless it is done within your Controller's `update` method. 
+Now that you have the Controller bound to the View you should use the controller to manage your View by changing data in your View Model only. You should never directly manipulate the View within the controller unless it is done within your Controller's `update` method.
 
 **Controller Prototype Inheritance**
 
@@ -161,13 +161,7 @@ Also just like a Controller, if a View is nested within another View, the child 
 
 		<span data-x-bind="value" data-x-filter="filterId"></span>
 
-* **data-x-node** - This attribute is used to make specific elements available to the View Object using the `view.node('nodeId')` method, where `'nodeId'` is the value you provide in this attribute.
-
-		<div data-x-node="nodeId"></div>
-
 ## Library API Documentation
-
-## Library Included Aspects
 
 ##Acknowledgements
 
