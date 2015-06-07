@@ -285,17 +285,6 @@
             var controller = $.x.controller('element1Node');
             assert.ok(controller._view.parent()._id === 'parentNode', 'Got Parent View Successfully Check');
         });
-
-
-        /*
-         * view.select() Get a selected DOM
-         */
-        qunit.test('view.node(nodeName)', function (assert) {
-            var controller1 = $.x.controller('element1Node');
-            var controller2 = $.x.controller('element2Node');
-            assert.equal(controller1._view.node('node').attr('data-x-node'), $('[data-x-node="node"]').attr('data-x-node'), 'Selector Selected Properly');
-            assert.ok(controller2._view.node('node').length === 0, 'No Selector Empty Check');
-        });
     });
 
 })(QUnit, jQuery);

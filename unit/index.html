@@ -63,15 +63,6 @@
                     </select>
                     Filter: <span data-x-bind="form.value" data-x-filter="josh"></span>
                 </div>
-                <div class="testSquare gold" data-x-controller="click">
-                    <b>Click Tests</b>
-                    <div style="float:left; width: 100%;">
-                        <div style="width: 75px; height: 75px; background: grey; float:left; cursor: pointer;" data-x-aspect="x" data-click="test.clicked">
-                            Click Here!
-                        </div>
-                        <h3 data-x-node="message" style="width: 100%; float:left;color: red;">Click Successful!</h3>
-                    </div>
-                </div>
                 <div class="testSquare gold" data-x-controller="aspectWithController">
                     <b>Aspect With Controllers</b>
                     <div data-x-aspect="list list" data-list="list1.data" data-title="List1"></div>
@@ -102,14 +93,10 @@
         <!--view extensions -->
         <script type="text/javascript" src="/js/extend/view/parent.js"></script>
         <script type="text/javascript" src="/js/extend/view/accessor.js"></script>
-        <script type="text/javascript" src="/js/extend/view/node.js"></script>
 
         <!--pattern extensions -->
         <script type="text/javascript" src="/js/extend/plugins/mvvm.js"></script>
         <script type="text/javascript" src="/js/extend/plugins/aspects.js"></script>
-
-        <!--aspects -->
-        <script type="text/javascript" src="/js/aspects/x.js"></script>
 
         <!--unit -->
         <script type="text/javascript" src="/unit/unit.js"></script>
@@ -130,31 +117,6 @@
                 });
             })(jQuery);
         </script>
-
-        <!-- Click Check -->
-        <script type="text/javascript">
-            (function ($) {
-                $(function () {
-                    $.x.controller('click', function (controller, view) {
-                        view.btnClicked = false;
-
-                        controller.update(function () {
-                            if (view.btnClicked) {
-                                view.node('message').show();
-                            } else {
-                                view.node('message').hide();
-                            }
-                        });
-
-                        controller.test = {
-                            clicked: function (event, element, attributes) {
-                                view.btnClicked = true;
-                                view.apply();
-                            }
-                        };
-                    });
-                });
-            })(jQuery);</script>
 
         <!--Aspects W/ Controller Check-->
         <script type="text/javascript">
