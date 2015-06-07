@@ -352,20 +352,6 @@
 })(jQuery);
 (function ($) {
     $(function () {
-        $.x.extend.view('node', function () {
-            return function (nodeName) {
-                var controller = $.x.controller(this._id);
-                if ($.type(nodeName) !== $.x.type.undefined) {
-                    return controller._dom().find('[data-x-node="' + nodeName + '"]');
-                } else {
-                    return controller._dom();
-                }
-            };
-        });
-    });
-})(jQuery);
-(function ($) {
-    $(function () {
         $.x.extend.view('parent', function () {
             return function () {
                 return Object.getPrototypeOf(this);
@@ -678,24 +664,6 @@
                         }
                     });
                 }
-            }
-        });
-    });
-})(jQuery);
-(function ($) {
-    $(function () {
-        $.x.aspect('x', function (element, attributes) {
-            if (attributes.dataClick) {
-                var method = attributes.dataClick;
-                var node = element[0];
-                var attrs = attributes;
-                element.on('click.x', function (e) {
-                    var controller = $.x.controller($.x._myController(node));
-                    var callMethod = controller.accessor(method);
-                    if ($.type(callMethod) === $.x.type.function) {
-                        callMethod(e, element, attrs);
-                    }
-                });
             }
         });
     });
