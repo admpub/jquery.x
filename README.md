@@ -48,7 +48,7 @@ X differs from Angular in many distinct ways:
 * **Clearer Separation of View and Controller** The Controller in Angular is merely a definition and not so an object. So you cannot add methods to it. Instead, you are forced to add methods to your View Model. Your View Model is then responsible for both State and Business Logic. X has solved this problem by providing a Controller object separate from a View object directly in the controller definition.
 * **DOM Manipulation Based MVVM** Angular provides View updates through the use of template logi,c defined within Directives, in the template. X has provided a way to define DOM Manipulation logic within the Apply Loop for each Controller separately. Each controller has an Update Function that runs when the Apply Loop is invoked where all of your DOM Manipulation will happen based on your View Model state.
 * **Easier Library Extensions** Angular has made a way to extend the library through Service Providers and Dependency Injection. Extending Angular can become very difficult to understand because of the number of options they provide as you extend the library. You can extend Angular with a Service, Provider, Factory, Filter, etc. There are a number of blog posts out there to try and help you define which to use and why. X provides you direct access to extend the four primary components with one configuration interface.
-* **The plugin** Angular provides you with the ability to "extend the functionality of HTML" through the use of Directives. Directives, however, again are very difficult to implement. There are so many possible configurations, it becomes difficult to understand. X plugins are very similar to Angular Directives except there is only on two possible configurations available. A configuration that wraps the DOM in a dynamic Controller and one that does not use a controller definition.
+* **The Plugin** Angular provides you with the ability to "extend the functionality of HTML" through the use of Directives. Directives, however, again are very difficult to implement. There are so many possible configurations, it becomes difficult to understand. X Plugins are very similar to Angular Directives except there is only on two possible configurations available. A configuration that wraps the DOM in a dynamic Controller and one that does not use a controller definition.
 
 ## X Overview
 
@@ -69,14 +69,12 @@ or
 
 	$.x
 
-You will mostly use this object to register and define your application components. Like your Controllers, plugins, Filters, and Custom Events.
+You will mostly use this object to register and define your application components. Like your Controllers, Plugins, and Custom Events.
 
 	//register a Controller
 	$.x.controller('controllerId', function(controller, view){});
 	//register an plugin
 	$.x.plugin('pluginId', function(element, attributes){});
-	//register a Filter
-	$.x.plugin('filterId', function(value){});
 	//register an event
 	$.x.on('eventId', function(eventObj){});
 	//trigger an event
@@ -135,11 +133,9 @@ Also just like a Controller, if a View is nested within another View, the child 
 
 ## Controller's Update Function
 
-## plugins
+## Plugins
 
 ## Custom Events
-
-## Filters
 
 ## Extending X
 
@@ -152,14 +148,6 @@ Also just like a Controller, if a View is nested within another View, the child 
 * **data-x-bind** - This attribute is used to bind the value of a property in a View Object to the view itself. As a value it is expecting the dot-notation path to the property you want to bind it to.
 
 		<span data-x-bind="path.to.property"></span>
-
-* **data-x-model** - This attribute is used to create a two-way bind between the View and the View Object. It should only be used on form fields supported by the HTML5 spec. As a value it is expecting the dot-notation path to the property you want to bind it to.
-
-		<input type="text" data-x-model="path.to.property" />
-
-* **data-x-filter** - This attribute is responsible for binding a filter definition to the View. A filter should only be applied where there is a need to manipulate the value of a bound property of the View Object you will be displaying. Filters will only work with values bound by `data-x-bind`. The value it is expecting is the ID of the filter you want to apply.
-
-		<span data-x-bind="value" data-x-filter="filterId"></span>
 
 ## Library API Documentation
 
