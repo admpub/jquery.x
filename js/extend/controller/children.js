@@ -3,7 +3,7 @@
         $.x.extend.controller('children', function () {
             return function () {
                 var controller = this;
-                var allChildrenDom = controller._dom().find('[data-x-controller]');
+                var allChildrenDom = controller.$().find('[data-x-controller]');
                 if (allChildrenDom.length > 0) {
                     var childrenControllers = [];
                     allChildrenDom.each(function () {

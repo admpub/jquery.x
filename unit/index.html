@@ -40,7 +40,7 @@
             <div data-x-controller="parentNode">
                 <div id="element1Node" class="testSquare" data-x-controller="element1Node">
                     element1Node
-                    <div data-x-node="node" id="selector1"></div>
+                    <div id="selector1"></div>
                 </div>
                 <div id="element2Node" class="testSquare" data-x-controller="element2Node">
                     element2Node
@@ -51,28 +51,27 @@
                 <div class="testSquare gold" data-x-controller="mvvm">
                     <b>MVVM Tests</b>
                     <h3 data-x-bind="form.value" style="margin: 0;"></h3>
-                    <input type="text" data-x-model="form.value">
-                    <input type="password" data-x-model="form.value" />
-                    <input type="checkbox" data-x-model="form.value" />
-                    <input type="radio" data-x-model="form.value" value="Yes" />Yes
-                    <input type="radio" data-x-model="form.value" value="No" />No
-                    <textarea data-x-model="form.value"></textarea>
-                    <select data-x-model="form.value">
+                    <input type="text" data-x-bind="form.value">
+                    <input type="password" data-x-bind="form.value" />
+                    <input type="checkbox" data-x-bind="form.value" />
+                    <input type="radio" data-x-bind="form.value" value="Yes" />Yes
+                    <input type="radio" data-x-bind="form.value" value="No" />No
+                    <textarea data-x-bind="form.value"></textarea>
+                    <select data-x-bind="form.value">
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                     </select>
-                    Filter: <span data-x-bind="form.value" data-x-filter="josh"></span>
                 </div>
-                <div class="testSquare gold" data-x-controller="aspectWithController">
-                    <b>Aspect With Controllers</b>
-                    <div data-x-aspect="list list" data-list="list1.data" data-title="List1"></div>
-                    <div data-x-aspect="list" data-list="list2.data" data-title="List2"></div>
+                <div class="testSquare gold" data-x-controller="pluginWithController">
+                    <b>plugin With Controllers</b>
+                    <div data-x-plugin="list list" data-list="list1.data" data-title="List1"></div>
+                    <div data-x-plugin="list" data-list="list2.data" data-title="List2"></div>
                 </div>
-                <div class="testSquare gold" data-x-controller="aspectWithOutController">
-                    <b>Aspect Without Controller</b>
-                    <div data-x-aspect="red">Red</div>
-                    <div data-x-aspect="red blue">Red Blue</div>
-                    <div data-x-aspect="textbox"></div>
+                <div class="testSquare gold" data-x-controller="pluginWithOutController">
+                    <b>plugin Without Controller</b>
+                    <div data-x-plugin="red">Red</div>
+                    <div data-x-plugin="red blue">Red Blue</div>
+                    <div data-x-plugin="textbox"></div>
                 </div>
             </div>
         </div>
@@ -95,8 +94,8 @@
         <script type="text/javascript" src="/js/extend/view/accessor.js"></script>
 
         <!--pattern extensions -->
-        <script type="text/javascript" src="/js/extend/plugins/mvvm.js"></script>
-        <script type="text/javascript" src="/js/extend/plugins/aspects.js"></script>
+        <script type="text/javascript" src="/js/extend/extensions/mvvm.js"></script>
+        <script type="text/javascript" src="/js/extend/extensions/plugin.js"></script>
 
         <!--unit -->
         <script type="text/javascript" src="/unit/unit.js"></script>
@@ -105,9 +104,6 @@
         <script type="text/javascript">
             (function ($) {
                 $(function () {
-                    $.x.filter('josh', function (value) {
-                        return 'Josh + ' + value;
-                    });
                     $.x.controller('mvvm', function (controller, view) {
                         view.form = {value: 'Yes'};
                         controller.update(function () {
@@ -118,11 +114,11 @@
             })(jQuery);
         </script>
 
-        <!--Aspects W/ Controller Check-->
+        <!--plugins W/ Controller Check-->
         <script type="text/javascript">
             (function ($) {
                 $(function () {
-                    $.x.aspect('list', true, function (controller, view, element, attributes) {
+                    $.x.plugin('list', true, function (controller, view, element, attributes) {
                         controller.update(function () {
                             var data = ('dataList' in attributes) ? view.accessor(attributes.dataList) : [];
                             var title = ('dataTitle' in attributes) ? attributes.dataTitle : '';
@@ -137,7 +133,7 @@
                         });
                     });
 
-                    $.x.controller('aspectWithController', function (controller, view) {
+                    $.x.controller('pluginWithController', function (controller, view) {
                         view.list1 = {
                             data: ['a', 'b', 'c']
                         };
@@ -150,23 +146,23 @@
             })(jQuery);
         </script>
 
-        <!-- Aspect W/O Controllers Check -->
+        <!-- plugin W/O Controllers Check -->
         <script type="text/javascript">
             (function ($) {
                 $(function () {
-                    $.x.aspect('red', function (element, attributes) {
+                    $.x.plugin('red', function (element, attributes) {
                         element.css({color: 'red'});
                     });
 
-                    $.x.aspect('blue', function (element, attributes) {
+                    $.x.plugin('blue', function (element, attributes) {
                         element.css({color: 'blue'});
                     });
 
-                    $.x.aspect('textbox', function (element, attributes) {
-                        element.append('<input type="text" data-x-model="test">');
+                    $.x.plugin('textbox', function (element, attributes) {
+                        element.append('<input type="text" data-x-bind="test">');
                     });
 
-                    $.x.controller('aspectWithOutController', function (controller, view) {
+                    $.x.controller('pluginWithOutController', function (controller, view) {
                         controller.update(function () {
                             console.log(view);
                         });

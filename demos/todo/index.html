@@ -45,11 +45,11 @@
         <div data-x-controller="todo">
             <div class="todo">
                 <h1>Business todos</h1>
-                <div data-x-aspect="todolist" data-source="business"></div>
+                <div data-x-plugin="todolist" data-source="business"></div>
             </div>
             <div class="todo">
                 <h1>Personal todos</h1>
-                <div data-x-aspect="todolist" data-source="personal"></div>
+                <div data-x-plugin="todolist" data-source="personal"></div>
             </div>
         </div>
         <script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
@@ -57,35 +57,42 @@
         <script type="text/javascript">
             (function ($) {
                 $(function () {
-                    $.x.aspect('todolist', true, function (controller, view, element, attributes) {
+                    $.x.plugin('todolist', true, function (controller, view, $element, attributes) {
                         var dataSource = ('dataSource' in attributes && attributes.dataSource) ? attributes.dataSource : false;
                         if (dataSource) {
-                            element.append('<input type="text" class="text" data-x-node="textbox" data-x-model="' + dataSource + '.newTodo" placeholder="New todo">');
-                            element.append('<ul></ul>');
+                            $element.append('<input type="text" class="text" data-x-bind="' + dataSource + '.newTodo" placeholder="New todo">');
+                            $element.append('<ul></ul>');
                             controller.update(function () {
                                 console.log(view);
-                                element.find('ul').empty();
+                                $element.find('ul').empty();
                                 if (view.accessor(dataSource).todos.length > 0) {
                                     $.each(view.accessor(dataSource).todos, function (index, todo) {
-                                        var item = $('<li data-x-aspect="x" data-click="updateTodoStatus" data-index="' + index + '"><input type="checkbox">' + todo.text + '</li>');
+                                        var item = $('<li data-index="' + index + '"><input type="checkbox">' + todo.text + '</li>');
                                         if (todo.completed) {
                                             item.addClass('completed');
                                             item.find('input').attr('checked', 'checked');
                                         }
-                                        element.find('ul').append(item);
+                                        $element.find('ul').append(item);
                                     });
                                 } else {
-                                    element.find('ul').append('<li>No todos</li>');
+                                    $element.find('ul').append('<li>No todos</li>');
                                 }
+
+                                $element.find('li[data-index]').on('click', function(){
+                                    controller.updateTodoStatus($(this));
+                                });
+
+
                             });
 
-                            controller.updateTodoStatus = function (event, element, attributes) {
+                            controller.updateTodoStatus = function ($element) {
                                 var todoData = view.accessor(dataSource).todos;
-                                todoData[attributes.dataIndex].completed = (todoData[attributes.dataIndex].completed) ? false : true;
+                                var index = $element.attr('data-index');
+                                todoData[index].completed = (todoData[index].completed) ? false : true;
                                 view.apply();
                             };
 
-                            view.node('textbox').on('keyup', function (e) {
+                            $element.find('input').on('keyup', function (e) {
                                 if (e.keyCode === 13) {
                                     this.blur();
                                     view.accessor(dataSource).todos.push({text: view.accessor(dataSource).newTodo, completed: false});
@@ -95,7 +102,7 @@
                                 }
                             });
                         } else {
-                            element.append('<p>No Data Source Found</p>');
+                            $element.append('<p>No Data Source Found</p>');
                         }
                     });
 

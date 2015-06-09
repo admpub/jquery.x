@@ -1,28 +1,32 @@
-(function ($) {
+(function($) {
     "use strict";
 
-    var x = function () {
+    var x = function() {
         var x = {
             _abstractView: {
                 _id: false,
-                _addExtension: function (extensionId, extension) {
+                _addExtension: function(extensionId, extension) {
                     this[extensionId] = extension;
                 }
 
             },
             _abstractController: {
                 _id: false,
-                _addExtension: function (extensionId, extension) {
+                _addExtension: function(extensionId, extension) {
                     this[extensionId] = extension;
                 },
-                _dom: function () {
-                    return $('[data-x-controller="' + this._id + '"]');
+                $: function(selector) {
+                    var $controller = $('[data-x-controller="' + this._id + '"]');
+                    if (selector) {
+                        return $controller.find(selector);
+                    }
+                    return $controller;
                 }
             },
-            _addExtension: function (extensionId, extension) {
+            _addExtension: function(extensionId, extension) {
                 this[extensionId] = extension;
             },
-            _myController: function (domNode) {
+            _myController: function(domNode) {
                 var controllerNode = $(domNode).parents('[data-x-controller]')[0];
                 if (controllerNode) {
                     return controllerNode.attributes['data-x-controller'].value;
@@ -32,7 +36,7 @@
             },
             _controllers: {},
             extend: {
-                x: function (extensionId, extensionFactory) {
+                x: function(extensionId, extensionFactory) {
                     if ($.type(extensionId) !== $.x.type.string || !extensionId) {
                         return $.x.error('Extension ID must be a string');
                     }
@@ -41,7 +45,7 @@
                     }
                     $.x._addExtension(extensionId, extensionFactory());
                 },
-                controller: function (extensionId, extensionFactory) {
+                controller: function(extensionId, extensionFactory) {
                     if ($.type(extensionId) !== $.x.type.string || !extensionId) {
                         return $.x.error('Extension ID must be a string');
                     }
@@ -50,7 +54,7 @@
                     }
                     $.x._abstractController._addExtension(extensionId, extensionFactory());
                 },
-                view: function (extensionId, extensionFactory) {
+                view: function(extensionId, extensionFactory) {
                     if ($.type(extensionId) !== $.x.type.string || !extensionId) {
                         return $.x.error('Extension ID must be a string');
                     }
@@ -60,7 +64,7 @@
                     $.x._abstractView._addExtension(extensionId, extensionFactory());
                 }
             },
-            controller: function (controllerId, initHandler) {
+            controller: function(controllerId, initHandler) {
                 if (!controllerId) {
                     return this.error('A controller ID is required');
                 }
@@ -76,7 +80,7 @@
                         return this.error('Controllers can only be bound once');
                     }
                     var x = this;
-                    this._controllers[controllerId] = function (controllerId) {
+                    this._controllers[controllerId] = function(controllerId) {
                         var controller;
                         var allParentsDom = $('[data-x-controller=' + controllerId + ']').parents('[data-x-controller]');
                         if (allParentsDom.length > 0) {
@@ -92,7 +96,7 @@
                         controller._id = controllerId;
 
                         //build the viewmodel for the controller
-                        controller._view = (function () {
+                        controller._view = (function() {
                             var parentController = controller.parent();
                             if (parentController) {
                                 return Object.create(parentController._view);
@@ -115,18 +119,18 @@
 
                 return this._controllers[controllerId];
             },
-            isController: function (controllerId) {
+            isController: function(controllerId) {
                 if (this._controllers[controllerId]) {
                     return true;
                 }
                 return false;
             },
-            error: function (message) {
+            error: function(message) {
                 var errorHeading = '' +
-                        '            _  _      ___  ____  ____ __   ___\n' +
-                        ' ________  | |/ /    / _ |  __/|  __/ _ `|  __|  ________\n' +
-                        '/___/___/   >  <    |  __/ |   | | | (_) | |    /___/___/\n' +
-                        '           /_/|_|    |___|_|   |_| |____/|_|\n';
+                    '            _  _      ___  ____  ____ __   ___\n' +
+                    ' ________  | |/ /    / _ |  __/|  __/ _ `|  __|  ________\n' +
+                    '/___/___/   >  <    |  __/ |   | | | (_) | |    /___/___/\n' +
+                    '           /_/|_|    |___|_|   |_| |____/|_|\n';
                 if (window.console && console.debug) {
                     console.debug(errorHeading);
                 }
@@ -257,7 +261,7 @@
         $.x.extend.controller('children', function () {
             return function () {
                 var controller = this;
-                var allChildrenDom = controller._dom().find('[data-x-controller]');
+                var allChildrenDom = controller.$().find('[data-x-controller]');
                 if (allChildrenDom.length > 0) {
                     var childrenControllers = [];
                     allChildrenDom.each(function () {
@@ -275,6 +279,7 @@
         });
     });
 })(jQuery);
+
 (function ($) {
     $(function () {
         $.x.extend.controller('parent', function () {
@@ -359,19 +364,19 @@
         });
     });
 })(jQuery);
-(function ($) {
-    $(function () {
+(function($) {
+    $(function() {
         /*
          * Extend the controller object to add the update functionality
          */
-        $.x.extend.controller('_update', function () {
-            return function () {
+        $.x.extend.controller('_update', function() {
+            return function() {
                 return;
             };
         });
 
-        $.x.extend.controller('update', function () {
-            return function (updateHandler) {
+        $.x.extend.controller('update', function() {
+            return function(updateHandler) {
                 this._update = updateHandler;
             };
         });
@@ -379,24 +384,24 @@
         /*
          * Extend the view object to add apply loop capabilities
          */
-        $.x.extend.view('_applyBefore', function () {
+        $.x.extend.view('_applyBefore', function() {
             return [];
         });
 
-        $.x.extend.view('_apply', function () {
+        $.x.extend.view('_apply', function() {
             return [];
         });
 
-        $.x.extend.view('apply', function () {
-            return function () {
+        $.x.extend.view('apply', function() {
+            return function() {
                 var controller = $.x.controller(this._id);
-                $.each(this._applyBefore, function (i, applyFunction) {
+                $.each(this._applyBefore, function(i, applyFunction) {
                     if ($.type(applyFunction) === $.x.type.function) {
                         applyFunction(controller, controller._view);
                     }
                 });
                 controller._update();
-                $.each(this._apply, function (i, applyFunction) {
+                $.each(this._apply, function(i, applyFunction) {
                     if ($.type(applyFunction) === $.x.type.function) {
                         applyFunction(controller, controller._view);
                     }
@@ -404,7 +409,7 @@
 
                 var childrenControllers = controller.children();
                 if (childrenControllers) {
-                    $.each(childrenControllers, function (i, childController) {
+                    $.each(childrenControllers, function(i, childController) {
                         childController._view.apply();
                     });
                 }
@@ -416,7 +421,7 @@
          * $.x.extend.apply([applyBeforeUpdate], applyFunction);
          * $.x.extend.apply(applyFunction);
          */
-        $.x.extend.apply = function (a, b) {
+        $.x.extend.apply = function(a, b) {
             var applyBeforeUpdate, applyFunction;
             if ($.type(a) === $.x.type.boolean) {
                 applyBeforeUpdate = a;
@@ -437,35 +442,14 @@
             }
         };
 
-
-        /*
-         * Extended x to handle filter registration
-         */
-        $.x.extend.x('_filters', function () {
-            return {};
-        });
-
-        $.x.extend.x('filter', function () {
-            return function (filterName, filterHandler) {
-                if ($.type(filterName) !== $.x.type.string || !filterName) {
-                    $.x.error('Filter name must be a string');
-                }
-                if ($.type(filterHandler) !== $.x.type.function) {
-                    $.x.error('Filter handler must be a function');
-                }
-
-                this._filters[filterName] = filterHandler;
-            };
-        });
-
         /**
          * Extend the controller to manage keep track of its bindings.
          */
-        $.x.extend.controller('_binds', function () {
-            return function () {
+        $.x.extend.controller('_binds', function() {
+            return function() {
                 var controller = this;
                 var binds = new $();
-                controller._dom().find('[data-x-bind], [data-x-model]').each(function () {
+                controller.$().find('[data-x-bind]').each(function() {
                     var bindElem = this;
                     if ($.x._myController(bindElem) === controller._id) {
                         binds.push(bindElem);
@@ -475,30 +459,16 @@
             };
         });
 
-        $.x.extend.controller('_models', function () {
-            return function () {
-                var controller = this;
-                var models = new $();
-                controller._dom().find('[data-x-model]:not(.x-mvvm)').each(function () {
-                    var modelElem = this;
-                    if ($.x._myController(modelElem) === controller._id) {
-                        models.push(modelElem);
-                    }
-                });
-                return models;
-            };
-        });
-
         /*
          * Extend Apply to manage bindings
          */
-        $.x.extend.apply(function (controller, view) {
-            var models = controller._models();
-            if (models.length > 0) {
-                models.on('change.x keyup.x', function () {
+        $.x.extend.apply(function(controller, view) {
+            var binds = controller._binds();
+            if (binds.length > 0) {
+                binds.on('change.x keyup.x', function() {
                     if (this.tagName === 'INPUT' && (this.type === 'text' || this.type === 'password')) {
                         if ($(this).data('val') !== this.value) {
-                            view.accessor($(this).attr('data-x-model'), this.value);
+                            view.accessor($(this).attr('data-x-bind'), this.value);
                             view.apply();
                         }
                         $(this).data('val', this.value);
@@ -509,30 +479,22 @@
                         } else {
                             bindValue = this.value;
                         }
-                        view.accessor($(this).attr('data-x-model'), bindValue);
+                        view.accessor($(this).attr('data-x-bind'), bindValue);
                         view.apply();
                     }
 
                 });
-                models.addClass('x-mvvm');
+                binds.addClass('x-mvvm');
             }
             //apply bindings values
-            controller._binds().each(function () {
+            controller._binds().each(function() {
                 var binding = this;
                 //get the element
                 var elem = $(binding);
                 //find out what type of element we are trying to set
                 var elemType = binding.tagName;
-                //get the property of the viewModel
-                var bindProp = (elem.attr('data-x-bind')) ? elem.attr('data-x-bind') : elem.attr('data-x-model');
                 //get the value of the property of the viewModel
-                var bindValue;
-                var bindVal = view.accessor(bindProp);
-                if (elem.attr('data-x-filter') && $.type($.x._filters[elem.attr('data-x-filter')]) === $.x.type.function && !elem.attr('data-x-model')) {
-                    bindValue = $.x._filters[elem.attr('data-x-filter')](bindVal);
-                } else {
-                    bindValue = bindVal;
-                }
+                var bindValue = view.accessor(elem.attr('data-x-bind'));
                 //set the value of the binding
                 if (!elem.is(':focus')) {
                     switch (elemType) {
@@ -568,35 +530,36 @@
         });
     });
 })(jQuery);
+
 (function ($) {
     $(function () {
-        $.x.extend.x('_aspects', function () {
+        $.x.extend.x('_plugins', function () {
             return {};
         });
 
-        $.x.extend.x('aspect', function () {
-            //$.x.aspect(id,[hasOwnController], initHandler)
-            //$.x.aspect(id, initHandler)
+        $.x.extend.x('plugin', function () {
+            //$.x.plugin(id,[hasOwnController], initHandler)
+            //$.x.plugin(id, initHandler)
             return function (a, b, c) {
-                var hasOwnController, aspectName, initHandler;
+                var hasOwnController, pluginName, initHandler;
                 if ($.type(b) === $.x.type.boolean) {
-                    aspectName = a;
+                    pluginName = a;
                     hasOwnController = b;
                     initHandler = c;
                 } else {
-                    aspectName = a;
+                    pluginName = a;
                     hasOwnController = false;
                     initHandler = b;
                 }
-                if ($.type(aspectName) !== $.x.type.string || !aspectName) {
-                    return this.error('Aspect name must be a string');
+                if ($.type(pluginName) !== $.x.type.string || !pluginName) {
+                    return this.error('plugin name must be a string');
                 }
 
                 if ($.type(initHandler) !== $.x.type.function) {
-                    return this.error('Aspect initHandler must be a function');
+                    return this.error('plugin initHandler must be a function');
                 }
 
-                this._aspects[aspectName] = {
+                this._plugins[pluginName] = {
                     controller: hasOwnController,
                     handler: initHandler
                 };
@@ -616,45 +579,45 @@
                 });
                 return attributes;
             };
-            //get all of the aspects
-            var aspects = controller._dom().find('[data-x-aspect]:not(.x-aspect)');
-            if (aspects && aspects.length > 0) {
+            //get all of the plugins
+            var plugins = controller.$().find('[data-x-plugin]:not(.x-plugin)');
+            if (plugins && plugins.length > 0) {
                 var reApply = false;
-                $.each(aspects, function (i, aspect) {
-                    if ($.x._myController(aspect) === controller._id) {
-                        //let the apply loop know that this aspect is already queued up
-                        $(aspect).addClass('x-aspect');
-                        var aspectNames = $(aspect).attr('data-x-aspect').split(' ');
-                        $.each(aspectNames, function (i, aspectName) {
-                            //check to see if aspect was defined
-                            if (!$.x._aspects[aspectName]) {
-                                return $.x.error('The Aspect "' + aspectName + '" is not defined');
+                $.each(plugins, function (i, plugin) {
+                    if ($.x._myController(plugin) === controller._id) {
+                        //let the apply loop know that this plugin is already queued up
+                        $(plugin).addClass('x-plugin');
+                        var pluginNames = $(plugin).attr('data-x-plugin').split(' ');
+                        $.each(pluginNames, function (i, pluginName) {
+                            //check to see if plugin was defined
+                            if (!$.x._plugins[pluginName]) {
+                                return $.x.error('The plugin "' + pluginName + '" is not defined');
                             }
 
-                            //determine if aspect was configured with controller
-                            if ($.x._aspects[aspectName].controller) {
-                                var aspectControllerId;
-                                var aspectController;
-                                //make sure there is not already a controller on this aspect.
-                                if ($(aspect).attr('data-x-controller')) {
-                                    aspectControllerId = $(aspect).attr('data-x-controller');
+                            //determine if plugin was configured with controller
+                            if ($.x._plugins[pluginName].controller) {
+                                var pluginControllerId;
+                                var pluginController;
+                                //make sure there is not already a controller on this plugin.
+                                if ($(plugin).attr('data-x-controller')) {
+                                    pluginControllerId = $(plugin).attr('data-x-controller');
                                 } else {
-                                    aspectControllerId = 'E' + Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-                                    $(aspect).attr('data-x-controller', aspectControllerId);
+                                    pluginControllerId = 'E' + Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+                                    $(plugin).attr('data-x-controller', pluginControllerId);
                                 }
                                 //get the controller
-                                aspectController = $.x.controller(aspectControllerId);
-                                $.x._aspects[aspectName].handler(aspectController, aspectController._view, $(aspect), getAttributes(aspect));
+                                pluginController = $.x.controller(pluginControllerId);
+                                $.x._plugins[pluginName].handler(pluginController, pluginController._view, $(plugin), getAttributes(plugin));
                             } else {
                                 reApply = true;
-                                $.x._aspects[aspectName].handler($(aspect), getAttributes(aspect));
+                                $.x._plugins[pluginName].handler($(plugin), getAttributes(plugin));
                             }
                         });
 
 
                     }
                 });
-                //if aspect is one without a controller we need
+                //if plugin is one without a controller we need
                 //to run the controller's update function to apply
                 //the changes of this addition
                 if (reApply) {

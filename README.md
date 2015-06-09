@@ -48,7 +48,7 @@ X differs from Angular in many distinct ways:
 * **Clearer Separation of View and Controller** The Controller in Angular is merely a definition and not so an object. So you cannot add methods to it. Instead, you are forced to add methods to your View Model. Your View Model is then responsible for both State and Business Logic. X has solved this problem by providing a Controller object separate from a View object directly in the controller definition.
 * **DOM Manipulation Based MVVM** Angular provides View updates through the use of template logi,c defined within Directives, in the template. X has provided a way to define DOM Manipulation logic within the Apply Loop for each Controller separately. Each controller has an Update Function that runs when the Apply Loop is invoked where all of your DOM Manipulation will happen based on your View Model state.
 * **Easier Library Extensions** Angular has made a way to extend the library through Service Providers and Dependency Injection. Extending Angular can become very difficult to understand because of the number of options they provide as you extend the library. You can extend Angular with a Service, Provider, Factory, Filter, etc. There are a number of blog posts out there to try and help you define which to use and why. X provides you direct access to extend the four primary components with one configuration interface.
-* **The Aspect** Angular provides you with the ability to "extend the functionality of HTML" through the use of Directives. Directives, however, again are very difficult to implement. There are so many possible configurations, it becomes difficult to understand. X Aspects are very similar to Angular Directives except there is only on two possible configurations available. A configuration that wraps the DOM in a dynamic Controller and one that does not use a controller definition.
+* **The plugin** Angular provides you with the ability to "extend the functionality of HTML" through the use of Directives. Directives, however, again are very difficult to implement. There are so many possible configurations, it becomes difficult to understand. X plugins are very similar to Angular Directives except there is only on two possible configurations available. A configuration that wraps the DOM in a dynamic Controller and one that does not use a controller definition.
 
 ## X Overview
 
@@ -69,14 +69,14 @@ or
 
 	$.x
 
-You will mostly use this object to register and define your application components. Like your Controllers, Aspects, Filters, and Custom Events.
+You will mostly use this object to register and define your application components. Like your Controllers, plugins, Filters, and Custom Events.
 
 	//register a Controller
 	$.x.controller('controllerId', function(controller, view){});
-	//register an Aspect
-	$.x.aspect('aspectId', function(element, attributes){});
+	//register an plugin
+	$.x.plugin('pluginId', function(element, attributes){});
 	//register a Filter
-	$.x.aspect('filterId', function(value){});
+	$.x.plugin('filterId', function(value){});
 	//register an event
 	$.x.on('eventId', function(eventObj){});
 	//trigger an event
@@ -135,7 +135,7 @@ Also just like a Controller, if a View is nested within another View, the child 
 
 ## Controller's Update Function
 
-## Aspects
+## plugins
 
 ## Custom Events
 
