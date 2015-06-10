@@ -1,9 +1,8 @@
 (function($) {
     "use strict";
-
     var x = function() {
         var x = {
-            _abstractView: {
+            _abstractController: {
                 _id: false,
                 _addExtension: function(extensionId, extension) {
                     this[extensionId] = extension;
@@ -14,12 +13,6 @@
                         return $controller.find(selector);
                     }
                     return $controller;
-                }
-            },
-            _abstractController: {
-                _id: false,
-                _addExtension: function(extensionId, extension) {
-                    this[extensionId] = extension;
                 }
             },
             _addExtension: function(extensionId, extension) {
@@ -52,15 +45,6 @@
                         return $.x.error('Extension factory must be a function');
                     }
                     $.x._abstractController._addExtension(extensionId, extensionFactory());
-                },
-                view: function(extensionId, extensionFactory) {
-                    if ($.type(extensionId) !== $.x.type.string || !extensionId) {
-                        return $.x.error('Extension ID must be a string');
-                    }
-                    if ($.type(extensionFactory) !== $.x.type.function) {
-                        return $.x.error('Extension factory must be a function');
-                    }
-                    $.x._abstractView._addExtension(extensionId, extensionFactory());
                 }
             },
             controller: function(controllerId, initHandler) {
@@ -93,27 +77,13 @@
 
                         //set the controller Id
                         controller._id = controllerId;
-
-                        //build the viewmodel for the controller
-                        controller._view = (function() {
-                            var parentController = controller.parent();
-                            if (parentController) {
-                                return Object.create(parentController._view);
-                            } else {
-                                return Object.create(x._abstractView);
-                            }
-                        })();
-                        //set the controller id
-                        controller._view._id = controllerId;
                         return controller;
                     }(controllerId);
                 }
 
                 if (initHandler) {
-                    initHandler(this._controllers[controllerId], this._controllers[controllerId]._view);
-                    if ($.type(this._controllers[controllerId]._view.apply) === this.type.function) {
-                        this._controllers[controllerId]._view.apply();
-                    }
+                    initHandler(this._controllers[controllerId]);
+                    this._controllers[controllerId].apply();
                 }
 
                 return this._controllers[controllerId];

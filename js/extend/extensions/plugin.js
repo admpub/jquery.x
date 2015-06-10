@@ -33,9 +33,9 @@
             };
         });
 
-        $.x.extend.apply(function (controller, view) {
+        $.x.extend.apply(function (controller) {
             //get all of the plugins
-            var plugins = view.$().find('[data-x-plugin]:not(.x-plugin)');
+            var plugins = controller.$().find('[data-x-plugin]:not(.x-plugin)');
             if (plugins && plugins.length > 0) {
                 var reApply = false;
                 $.each(plugins, function (i, plugin) {
@@ -62,7 +62,7 @@
                                 }
                                 //get the controller
                                 pluginController = $.x.controller(pluginControllerId);
-                                $.x._plugins[pluginName].handler(pluginController, pluginController._view, $(plugin));
+                                $.x._plugins[pluginName].handler(pluginController, $(plugin));
                             } else {
                                 reApply = true;
                                 $.x._plugins[pluginName].handler($(plugin));
@@ -76,9 +76,9 @@
                 //to run the controller's update function to apply
                 //the changes of this addition
                 if (reApply) {
-                    $.each(controller._view._apply, function (i, applyFunction) {
+                    $.each(controller._apply, function (i, applyFunction) {
                         if ($.type(applyFunction) === $.x.type.function) {
-                            applyFunction(controller, controller._view);
+                            applyFunction(controller);
                         }
                     });
                 }

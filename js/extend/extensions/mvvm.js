@@ -4,47 +4,52 @@
          * Extend the controller object to add the update functionality
          */
         $.x.extend.controller('_update', function() {
-            return function() {
-                return;
-            };
+            return false;
         });
 
         $.x.extend.controller('update', function() {
             return function(updateHandler) {
-                this._update = updateHandler;
+                if(!this._update){
+                    this._update = [];
+                }
+                this._update.push(updateHandler);
             };
         });
 
-        /*
-         * Extend the view object to add apply loop capabilities
-         */
-        $.x.extend.view('_applyBefore', function() {
+        $.x.extend.controller('_applyBefore', function() {
             return [];
         });
 
-        $.x.extend.view('_apply', function() {
+        $.x.extend.controller('_apply', function() {
             return [];
         });
 
-        $.x.extend.view('apply', function() {
+        $.x.extend.controller('apply', function() {
             return function() {
-                var controller = $.x.controller(this._id);
+                var controller = this;
+                //runt apply before functions
                 $.each(this._applyBefore, function(i, applyFunction) {
                     if ($.type(applyFunction) === $.x.type.function) {
-                        applyFunction(controller, controller._view);
+                        applyFunction(controller);
                     }
                 });
-                controller._update();
+                //run all update functions for this controller
+                $.each(this._apply, function(i, updateFunction) {
+                    if ($.type(updateFunction) === $.x.type.function) {
+                        updateFunction(controller);
+                    }
+                });
+                //run apply functions
                 $.each(this._apply, function(i, applyFunction) {
                     if ($.type(applyFunction) === $.x.type.function) {
-                        applyFunction(controller, controller._view);
+                        applyFunction(controller);
                     }
                 });
 
-                var childrenControllers = controller.children();
+                var childrenControllers = this.children();
                 if (childrenControllers) {
                     $.each(childrenControllers, function(i, childController) {
-                        childController._view.apply();
+                        childController.apply();
                     });
                 }
             };
@@ -70,9 +75,9 @@
             }
 
             if (applyBeforeUpdate) {
-                $.x._abstractView._applyBefore.push(applyFunction);
+                $.x._abstractController._applyBefore.push(applyFunction);
             } else {
-                $.x._abstractView._apply.push(applyFunction);
+                $.x._abstractController._apply.push(applyFunction);
             }
         };
 
@@ -81,10 +86,9 @@
          */
         $.x.extend.controller('_binds', function() {
             return function() {
-                var controller = this;
-                var view = this._view;
                 var binds = new $();
-                view.$().find('[data-x-bind]').each(function() {
+                var controller = this;
+                this.$().find('[data-x-bind]').each(function() {
                     var bindElem = this;
                     if ($.x._myController(bindElem) === controller._id) {
                         binds.push(bindElem);
@@ -97,14 +101,14 @@
         /*
          * Extend Apply to manage bindings
          */
-        $.x.extend.apply(function(controller, view) {
+        $.x.extend.apply(function(controller) {
             var binds = controller._binds();
             if (binds.length > 0) {
                 binds.on('change.x keyup.x', function() {
                     if (this.tagName === 'INPUT' && (this.type === 'text' || this.type === 'password')) {
                         if ($(this).data('val') !== this.value) {
-                            view.accessor($(this).attr('data-x-bind'), this.value);
-                            view.apply();
+                            controller.accessor($(this).attr('data-x-bind'), this.value);
+                            controller.apply();
                         }
                         $(this).data('val', this.value);
                     } else {
@@ -114,8 +118,8 @@
                         } else {
                             bindValue = this.value;
                         }
-                        view.accessor($(this).attr('data-x-bind'), bindValue);
-                        view.apply();
+                        controller.accessor($(this).attr('data-x-bind'), bindValue);
+                        controller.apply();
                     }
 
                 });
@@ -128,8 +132,8 @@
                 var elem = $(binding);
                 //find out what type of element we are trying to set
                 var elemType = binding.tagName;
-                //get the value of the property of the viewModel
-                var bindValue = view.accessor(elem.attr('data-x-bind'));
+                //get the value of the property of the controller
+                var bindValue = controller.accessor(elem.attr('data-x-bind'));
                 //set the value of the binding
                 if (!elem.is(':focus')) {
                     switch (elemType) {
