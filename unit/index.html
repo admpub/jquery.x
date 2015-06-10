@@ -1,174 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="/bower_components/qunit/qunit/qunit.css" />
-        <style type="text/css">
-            body {
-                background: #DEE0E0;;
-            }
-            #tests {
-                width: 50%;
-                float:left;
-            }
-            #qunit {
-                width: 50%;
-                float:left;
-            }
-            .testSquare {
-                background: gray;
-                color: white;
-                width: 85%;
-                min-height: 100px;
-                float: left;
-                margin: 15px 5%;
-                padding: 10px;
-            }
 
-            .gold {
-                background: goldenrod;
-            }
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/bower_components/qunit/qunit/qunit.css" />
+    <style type="text/css">
+        body {
+            background: #DEE0E0;
+            ;
+        }
 
-        </style>
-        <title>jQuery.x Testing</title>
-    </head>
-    <body>
-        <div id="tests">
-            <h1 style="text-align: center;">DOM Test Environment</h1>
-            <div data-x-controller="parentNode">
-                <div id="element1Node" class="testSquare" data-x-controller="element1Node">
-                    element1Node
-                    <div id="selector1"></div>
-                </div>
-                <div id="element2Node" class="testSquare" data-x-controller="element2Node">
-                    element2Node
-                </div>
+        #tests {
+            width: 50%;
+            float: left;
+        }
+
+        #qunit {
+            width: 50%;
+            float: left;
+        }
+
+        .testSquare {
+            background: gray;
+            color: white;
+            width: 85%;
+            min-height: 100px;
+            float: left;
+            margin: 15px 5%;
+            padding: 10px;
+        }
+
+        .gold {
+            background: goldenrod;
+        }
+    </style>
+    <title>jQuery.x Testing</title>
+</head>
+
+<body>
+    <div id="tests">
+        <h1 style="text-align: center;">DOM Test Environment</h1>
+        <div data-x-controller="parentNode">
+            <div id="element1Node" class="testSquare" data-x-controller="element1Node">
+                element1Node
+                <div id="selector1"></div>
             </div>
-            <div style="float:left; width:100%;">
-                <h1 style="text-align: center;">End To End Tests</h1>
-                <div class="testSquare gold" data-x-controller="mvvm">
-                    <b>MVVM Tests</b>
-                    <h3 data-x-bind="form.value" style="margin: 0;"></h3>
-                    <input type="text" data-x-bind="form.value">
-                    <input type="password" data-x-bind="form.value" />
-                    <input type="checkbox" data-x-bind="form.value" />
-                    <input type="radio" data-x-bind="form.value" value="Yes" />Yes
-                    <input type="radio" data-x-bind="form.value" value="No" />No
-                    <textarea data-x-bind="form.value"></textarea>
-                    <select data-x-bind="form.value">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
-                </div>
-                <div class="testSquare gold" data-x-controller="pluginWithController">
-                    <b>plugin With Controllers</b>
-                    <div data-x-plugin="list list" data-list="list1.data" data-title="List1"></div>
-                    <div data-x-plugin="list" data-list="list2.data" data-title="List2"></div>
-                </div>
-                <div class="testSquare gold" data-x-controller="pluginWithOutController">
-                    <b>plugin Without Controller</b>
-                    <div data-x-plugin="red">Red</div>
-                    <div data-x-plugin="red blue">Red Blue</div>
-                    <div data-x-plugin="textbox"></div>
-                </div>
+            <div id="element2Node" class="testSquare" data-x-controller="element2Node">
+                element2Node
             </div>
         </div>
-        <div id="qunit"></div>
-        <div id="qunit-fixture"></div>
-        <script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
-        <script type="text/javascript" src="/bower_components/qunit/qunit/qunit.js"></script>
-        <script type="text/javascript" src="/js/x.js"></script>
+        <div style="float:left; width:100%;">
+            <h1 style="text-align: center;">End To End Tests</h1>
+            <div class="testSquare gold" data-x-controller="mvvm">
+                <b>MVVM Tests</b>
+                <h3 data-x-bind="form.value" style="margin: 0;"></h3>
+                <input type="text" data-x-bind="form.value">
+                <input type="password" data-x-bind="form.value" />
+                <input type="checkbox" data-x-bind="form.value" />
+                <input type="radio" data-x-bind="form.value" value="Yes" />Yes
+                <input type="radio" data-x-bind="form.value" value="No" />No
+                <textarea data-x-bind="form.value"></textarea>
+                <select data-x-bind="form.value">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="testSquare gold" data-x-controller="pluginWithController">
+                <b>plugin With Controllers</b>
+                <div data-x-plugin="list list" data-list="list1.data" data-title="List1"></div>
+                <div data-x-plugin="list" data-list="list2.data" data-title="List2"></div>
+            </div>
+            <div class="testSquare gold" data-x-controller="pluginWithOutController">
+                <b>plugin Without Controller</b>
+                <div data-x-plugin="red">Red</div>
+                <div data-x-plugin="red blue">Red Blue</div>
+                <div data-x-plugin="textbox"></div>
+            </div>
+        </div>
+    </div>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="/bower_components/qunit/qunit/qunit.js"></script>
+    <script type="text/javascript" src="/js/x.js"></script>
 
-        <!--x extensions -->
-        <script type="text/javascript" src="/js/extend/x/events.js"></script>
+    <!--x extensions -->
+    <script type="text/javascript" src="/js/extend/x/events.js"></script>
 
-        <!--controller extensions -->
-        <script type="text/javascript" src="/js/extend/controller/parent.js"></script>
-        <script type="text/javascript" src="/js/extend/controller/children.js"></script>
-        <script type="text/javascript" src="/js/extend/controller/accessor.js"></script>
+    <!--controller extensions -->
+    <script type="text/javascript" src="/js/extend/controller/parent.js"></script>
+    <script type="text/javascript" src="/js/extend/controller/children.js"></script>
+    <script type="text/javascript" src="/js/extend/controller/accessor.js"></script>
 
-        <!--view extensions -->
-        <script type="text/javascript" src="/js/extend/view/parent.js"></script>
-        <script type="text/javascript" src="/js/extend/view/accessor.js"></script>
+    <!--pattern extensions -->
+    <script type="text/javascript" src="/js/extend/extensions/mvvm.js"></script>
+    <script type="text/javascript" src="/js/extend/extensions/plugin.js"></script>
 
-        <!--pattern extensions -->
-        <script type="text/javascript" src="/js/extend/extensions/mvvm.js"></script>
-        <script type="text/javascript" src="/js/extend/extensions/plugin.js"></script>
+    <!--unit -->
+    <script type="text/javascript" src="/unit/unit.js"></script>
 
-        <!--unit -->
-        <script type="text/javascript" src="/unit/unit.js"></script>
-
-        <!--MVVM Check-->
-        <script type="text/javascript">
-            (function ($) {
-                $(function () {
-                    $.x.controller('mvvm', function (controller, view) {
-                        view.form = {value: 'Yes'};
-                        controller.update(function () {
-                            console.log(view);
-                        });
+    <!--MVVM Check-->
+    <script type="text/javascript">
+        (function($) {
+            $(function() {
+                $.x.controller('mvvm', function(controller) {
+                    controller.form = {
+                        value: 'Yes'
+                    };
+                    controller.update(function() {
+                        console.log(controller);
                     });
                 });
-            })(jQuery);
-        </script>
+            });
+        })(jQuery);
+    </script>
 
-        <!--plugins W/ Controller Check-->
-        <script type="text/javascript">
-            (function ($) {
-                $(function () {
-                    $.x.plugin('list', true, function (controller, view, element, attributes) {
-                        controller.update(function () {
-                            var data = ('dataList' in attributes) ? view.accessor(attributes.dataList) : [];
-                            var title = ('dataTitle' in attributes) ? attributes.dataTitle : '';
-                            element.empty();
-                            element.append('<h4>' + title + '</h4>');
-                            if (data) {
-                                element.append('<ul></ul>');
-                                $.each(data, function (i, value) {
-                                    element.find('ul').append('<li>' + value + '</li>')
-                                });
-                            }
-                        });
-                    });
-
-                    $.x.controller('pluginWithController', function (controller, view) {
-                        view.list1 = {
-                            data: ['a', 'b', 'c']
-                        };
-
-                        view.list2 = {
-                            data: ['d', 'e', 'f']
-                        };
+    <!--plugins W/ Controller Check-->
+    <script type="text/javascript">
+        (function($) {
+            $(function() {
+                $.x.plugin('list', true, function(controller, element) {
+                    controller.update(function() {
+                        var data = controller.accessor(controller.$().attr('data-list'));
+                        var title = controller.$().attr('data-title');
+                        element.empty();
+                        element.append('<h4>' + title + '</h4>');
+                        if (data) {
+                            element.append('<ul></ul>');
+                            $.each(data, function(i, value) {
+                                element.find('ul').append('<li>' + value + '</li>')
+                            });
+                        }
                     });
                 });
-            })(jQuery);
-        </script>
 
-        <!-- plugin W/O Controllers Check -->
-        <script type="text/javascript">
-            (function ($) {
-                $(function () {
-                    $.x.plugin('red', function (element, attributes) {
-                        element.css({color: 'red'});
-                    });
+                $.x.controller('pluginWithController', function(controller) {
+                    controller.list1 = {
+                        data: ['a', 'b', 'c']
+                    };
 
-                    $.x.plugin('blue', function (element, attributes) {
-                        element.css({color: 'blue'});
-                    });
+                    controller.list2 = {
+                        data: ['d', 'e', 'f']
+                    };
+                });
+            });
+        })(jQuery);
+    </script>
 
-                    $.x.plugin('textbox', function (element, attributes) {
-                        element.append('<input type="text" data-x-bind="test">');
-                    });
-
-                    $.x.controller('pluginWithOutController', function (controller, view) {
-                        controller.update(function () {
-                            console.log(view);
-                        });
+    <!-- plugin W/O Controllers Check -->
+    <script type="text/javascript">
+        (function($) {
+            $(function() {
+                $.x.plugin('red', function(element, attributes) {
+                    element.css({
+                        color: 'red'
                     });
                 });
-            })(jQuery);
-        </script>
-    </body>
+
+                $.x.plugin('blue', function(element, attributes) {
+                    element.css({
+                        color: 'blue'
+                    });
+                });
+
+                $.x.plugin('textbox', function(element, attributes) {
+                    element.append('<input type="text" data-x-bind="test">');
+                });
+
+                $.x.controller('pluginWithOutController', function(controller, view) {
+                    controller.update(function() {
+                        console.log(view);
+                    });
+                });
+            });
+        })(jQuery);
+    </script>
+</body>
+
 </html>

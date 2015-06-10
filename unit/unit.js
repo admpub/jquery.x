@@ -41,26 +41,6 @@
             controller.test1();
         });
 
-        /*
-         * $.x.extend.view() Extends the page object.
-         */
-        qunit.test('$.x.extend.view(extensionName, extensionHandler)', function(assert) {
-            assert.ok($.x.extend.view() instanceof Error, 'Empty Extension Name Check');
-            assert.ok($.x.extend.view('test') instanceof Error, 'Empty Extension Handler Check');
-            $.x.extend.view('test', function() {
-                return {
-                    test: 'test'
-                };
-            });
-            var view = $.x.controller('element1Node')._view;
-            assert.ok($.type(view.test) === $.x.type.object && view.test.test === 'test', 'Extension Gets Applied Correctly to View Object Check');
-            $.x.extend.view('test1', function() {
-                return function() {
-                    assert.equal(this, view, 'This Keywork In Context Of View Check');
-                };
-            });
-            view.test1();
-        });
 
         /*
          * $.x.extend.apply() Extends the page object.
@@ -70,7 +50,7 @@
             $.x.extend.apply(function() {
                 return 'passed';
             });
-            assert.ok($.x._abstractView._apply[$.x._abstractView._apply.length - 1] && $.x._abstractView._apply[$.x._abstractView._apply.length - 1]() === 'passed', 'Apply Extensions Applied Correctly Check');
+            assert.ok($.x._abstractController._apply[$.x._abstractController._apply.length - 1] && $.x._abstractController._apply[$.x._abstractController._apply.length - 1]() === 'passed', 'Apply Extensions Applied Correctly Check');
         });
 
         /*
@@ -81,7 +61,7 @@
             $.x.extend.apply(true, function() {
                 return 'passed';
             });
-            assert.ok($.x._abstractView._applyBefore[$.x._abstractView._applyBefore.length - 1] && $.x._abstractView._applyBefore[$.x._abstractView._applyBefore.length - 1]() === 'passed', 'Apply Extensions Applied Correctly Check');
+            assert.ok($.x._abstractController._applyBefore[$.x._abstractController._applyBefore.length - 1] && $.x._abstractController._applyBefore[$.x._abstractController._applyBefore.length - 1]() === 'passed', 'Apply Extensions Applied Correctly Check');
         });
 
         /*
@@ -92,8 +72,6 @@
             assert.ok($.x.controller('NoController') instanceof Error, 'No DOM data-x-controller Declaration Check');
             var validController = $.x.controller('element1Node');
             assert.equal(Object.getPrototypeOf(validController), validController.parent(), 'Valid Controller Created From Parent Controller');
-            assert.ok(validController._view, 'View Created On Controller');
-            assert.equal(Object.getPrototypeOf(validController._view)._id, 'parentNode', 'View is Prototype of Parent View');
         });
 
         /*
@@ -162,14 +140,13 @@
         });
 
         /*
-         * view.$() Gets the DOM of the controller
+         * controller.$() Gets the DOM of the controller
          */
-        qunit.test('view.$(selector)', function(assert) {
+        qunit.test('controller.$(selector)', function(assert) {
             var controller = $.x.controller('element1Node');
-            var view = controller._view;
-            assert.ok(view.$() instanceof $, 'DOM Is Return Check');
-            assert.ok(view.$().attr('data-x-controller') === 'element1Node', 'Returned controller');
-            assert.ok(view.$('#selector1').attr('id') === 'selector1', 'Retrieved proper node');
+            assert.ok(controller.$() instanceof $, 'DOM Is Return Check');
+            assert.ok(controller.$().attr('data-x-controller') === 'element1Node', 'Returned controller');
+            assert.ok(controller.$('#selector1').attr('id') === 'selector1', 'Retrieved proper node');
         });
 
         /*
@@ -180,7 +157,8 @@
             controller.update(function() {
                 return 'passed';
             });
-            assert.ok(controller._update() === 'passed', '_update Function Replaced Properly Check');
+            debugger;
+            assert.ok(controller._update[0]() === 'passed', '_update Function Replaced Properly Check');
         });
 
         /*
@@ -230,9 +208,9 @@
         });
 
         /*
-         * view.apply() Runs the apply loop to update the view
+         * controller.apply() Runs the apply loop to update the view
          */
-        qunit.test('view.apply()', function(assert) {
+        qunit.test('controller.apply()', function(assert) {
             var applyTest = false;
             $.x.extend.apply(function() {
                 applyTest = true;
@@ -248,45 +226,10 @@
             controller2.update(function() {
                 controller2UpdateTest = true;
             });
-            parent._view.apply();
+            parent.apply();
             assert.ok(applyTest, 'Apply Ran Properly Check');
             assert.ok(controller1UpdateTest, 'Controller Update Method Ran Properly Check');
             assert.ok(controller1UpdateTest && controller2UpdateTest, 'Children Controllers Update Method Ran Properly Check');
-        });
-
-        /*
-         * view.accessor() Accesses the view model to either set a property or get a property
-         */
-        qunit.test('view.accessor(property, value)', function(assert) {
-            var controller = $.x.controller('element1Node');
-            //set a property on the viewmodel
-            var view = controller._view;
-            assert.ok(view.accessor({}) instanceof Error, 'Check Error For Non-String as Property');
-            view.accessor('unit.test', 'passed');
-            assert.ok(view.unit.test === 'passed', 'Property On View Model Set Properly Check');
-            assert.ok(view.accessor('unit.test') === 'passed', 'Property On View Model Get Properly Check');
-            //check index notation
-            view.unit = {
-                test: [{
-                    test: 1
-                }, {
-                    test: 2
-                }]
-            };
-            assert.ok(view.accessor('unit.test.1.test') === 2, 'Accessor Accessed Property of Array');
-            view.accessor('unit.test.0.test', 'Updated');
-            assert.ok(view.unit.test[0].test === 'Updated', 'Access Updated Property of Array');
-            view.accessor('parent().unit.test', 'Passed');
-            assert.ok($.x.controller('parentNode')._view.unit.test === 'Passed', 'Accessor Setting Property on Parent View Using parent() Notation');
-            assert.ok(view.accessor('parent().unit.test') === 'Passed', 'Acccessor Accessed Property of Parent View');
-        });
-
-        /*
-         * view.parent() gets the parent view
-         */
-        qunit.test('view.parent()', function(assert) {
-            var controller = $.x.controller('element1Node');
-            assert.ok(controller._view.parent()._id === 'parentNode', 'Got Parent View Successfully Check');
         });
     });
 
