@@ -74,7 +74,7 @@ You will mostly use this object to register and define your application componen
 	//register a Controller
 	$.x.controller('controllerId', function(controller, view){});
 	//register an plugin
-	$.x.plugin('pluginId', function(element, attributes){});
+	$.x.plugin('pluginId', function(element){});
 	//register an event
 	$.x.on('eventId', function(eventObj){});
 	//trigger an event

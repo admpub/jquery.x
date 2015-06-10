@@ -57,8 +57,8 @@
         <script type="text/javascript">
             (function ($) {
                 $(function () {
-                    $.x.plugin('todolist', true, function (controller, view, $element, attributes) {
-                        var dataSource = ('dataSource' in attributes && attributes.dataSource) ? attributes.dataSource : false;
+                    $.x.plugin('todolist', true, function (controller, view, $element) {
+                        var dataSource = $element.attr('data-source');
                         if (dataSource) {
                             $element.append('<input type="text" class="text" data-x-bind="' + dataSource + '.newTodo" placeholder="New todo">');
                             $element.append('<ul></ul>');

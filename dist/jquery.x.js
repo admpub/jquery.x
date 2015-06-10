@@ -7,13 +7,6 @@
                 _id: false,
                 _addExtension: function(extensionId, extension) {
                     this[extensionId] = extension;
-                }
-
-            },
-            _abstractController: {
-                _id: false,
-                _addExtension: function(extensionId, extension) {
-                    this[extensionId] = extension;
                 },
                 $: function(selector) {
                     var $controller = $('[data-x-controller="' + this._id + '"]');
@@ -21,6 +14,12 @@
                         return $controller.find(selector);
                     }
                     return $controller;
+                }
+            },
+            _abstractController: {
+                _id: false,
+                _addExtension: function(extensionId, extension) {
+                    this[extensionId] = extension;
                 }
             },
             _addExtension: function(extensionId, extension) {
@@ -261,7 +260,8 @@
         $.x.extend.controller('children', function () {
             return function () {
                 var controller = this;
-                var allChildrenDom = controller.$().find('[data-x-controller]');
+                var view = this._view;
+                var allChildrenDom = view.$().find('[data-x-controller]');
                 if (allChildrenDom.length > 0) {
                     var childrenControllers = [];
                     allChildrenDom.each(function () {
@@ -448,8 +448,9 @@
         $.x.extend.controller('_binds', function() {
             return function() {
                 var controller = this;
+                var view = this._view;
                 var binds = new $();
-                controller.$().find('[data-x-bind]').each(function() {
+                view.$().find('[data-x-bind]').each(function() {
                     var bindElem = this;
                     if ($.x._myController(bindElem) === controller._id) {
                         binds.push(bindElem);
@@ -580,7 +581,7 @@
                 return attributes;
             };
             //get all of the plugins
-            var plugins = controller.$().find('[data-x-plugin]:not(.x-plugin)');
+            var plugins = view.$().find('[data-x-plugin]:not(.x-plugin)');
             if (plugins && plugins.length > 0) {
                 var reApply = false;
                 $.each(plugins, function (i, plugin) {
@@ -602,15 +603,15 @@
                                 if ($(plugin).attr('data-x-controller')) {
                                     pluginControllerId = $(plugin).attr('data-x-controller');
                                 } else {
-                                    pluginControllerId = 'E' + Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+                                    pluginControllerId = 'plugin-x-' + Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
                                     $(plugin).attr('data-x-controller', pluginControllerId);
                                 }
                                 //get the controller
                                 pluginController = $.x.controller(pluginControllerId);
-                                $.x._plugins[pluginName].handler(pluginController, pluginController._view, $(plugin), getAttributes(plugin));
+                                $.x._plugins[pluginName].handler(pluginController, pluginController._view, $(plugin));
                             } else {
                                 reApply = true;
-                                $.x._plugins[pluginName].handler($(plugin), getAttributes(plugin));
+                                $.x._plugins[pluginName].handler($(plugin));
                             }
                         });
 

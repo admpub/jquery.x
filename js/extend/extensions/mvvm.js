@@ -82,8 +82,9 @@
         $.x.extend.controller('_binds', function() {
             return function() {
                 var controller = this;
+                var view = this._view;
                 var binds = new $();
-                controller.$().find('[data-x-bind]').each(function() {
+                view.$().find('[data-x-bind]').each(function() {
                     var bindElem = this;
                     if ($.x._myController(bindElem) === controller._id) {
                         binds.push(bindElem);

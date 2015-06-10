@@ -162,13 +162,14 @@
         });
 
         /*
-         * controller.$() Gets the DOM of the controller
+         * view.$() Gets the DOM of the controller
          */
-        qunit.test('controller.$(selector)', function(assert) {
+        qunit.test('view.$(selector)', function(assert) {
             var controller = $.x.controller('element1Node');
-            assert.ok(controller.$() instanceof $, 'DOM Is Return Check');
-            assert.ok(controller.$().attr('data-x-controller') === 'element1Node', 'Returned controller');
-            assert.ok(controller.$('#selector1').attr('id') === 'selector1', 'Retrieved proper node');
+            var view = controller._view;
+            assert.ok(view.$() instanceof $, 'DOM Is Return Check');
+            assert.ok(view.$().attr('data-x-controller') === 'element1Node', 'Returned controller');
+            assert.ok(view.$('#selector1').attr('id') === 'selector1', 'Retrieved proper node');
         });
 
         /*

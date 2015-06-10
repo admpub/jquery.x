@@ -34,20 +34,8 @@
         });
 
         $.x.extend.apply(function (controller, view) {
-            var getAttributes = function (domNode) {
-                var attributes = {};
-                $.each(domNode.attributes, function () {
-                    if (this.specified) {
-                        var property = this.name.replace(/\W+(.)/g, function (x, chr) {
-                            return chr.toUpperCase();
-                        });
-                        attributes[property] = this.value;
-                    }
-                });
-                return attributes;
-            };
             //get all of the plugins
-            var plugins = controller.$().find('[data-x-plugin]:not(.x-plugin)');
+            var plugins = view.$().find('[data-x-plugin]:not(.x-plugin)');
             if (plugins && plugins.length > 0) {
                 var reApply = false;
                 $.each(plugins, function (i, plugin) {
@@ -69,15 +57,15 @@
                                 if ($(plugin).attr('data-x-controller')) {
                                     pluginControllerId = $(plugin).attr('data-x-controller');
                                 } else {
-                                    pluginControllerId = 'E' + Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+                                    pluginControllerId = 'plugin-x-' + Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
                                     $(plugin).attr('data-x-controller', pluginControllerId);
                                 }
                                 //get the controller
                                 pluginController = $.x.controller(pluginControllerId);
-                                $.x._plugins[pluginName].handler(pluginController, pluginController._view, $(plugin), getAttributes(plugin));
+                                $.x._plugins[pluginName].handler(pluginController, pluginController._view, $(plugin));
                             } else {
                                 reApply = true;
-                                $.x._plugins[pluginName].handler($(plugin), getAttributes(plugin));
+                                $.x._plugins[pluginName].handler($(plugin));
                             }
                         });
 

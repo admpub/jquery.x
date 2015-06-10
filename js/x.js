@@ -7,13 +7,6 @@
                 _id: false,
                 _addExtension: function(extensionId, extension) {
                     this[extensionId] = extension;
-                }
-
-            },
-            _abstractController: {
-                _id: false,
-                _addExtension: function(extensionId, extension) {
-                    this[extensionId] = extension;
                 },
                 $: function(selector) {
                     var $controller = $('[data-x-controller="' + this._id + '"]');
@@ -21,6 +14,12 @@
                         return $controller.find(selector);
                     }
                     return $controller;
+                }
+            },
+            _abstractController: {
+                _id: false,
+                _addExtension: function(extensionId, extension) {
+                    this[extensionId] = extension;
                 }
             },
             _addExtension: function(extensionId, extension) {
