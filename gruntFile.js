@@ -15,7 +15,6 @@ module.exports = function (grunt) {
                             'js/x.js',
                             'js/extend/x/**/*.js',
                             'js/extend/controller/**/*.js',
-                            'js/extend/view/**/*.js',
                             'js/extend/extensions/mvvm.js',
                             'js/extend/extensions/plugin.js'
                         ],

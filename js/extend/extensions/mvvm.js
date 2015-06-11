@@ -86,11 +86,25 @@
         /**
          * Extend the controller to manage keep track of its bindings.
          */
-        $.x.extend.controller('_binds', function() {
+        $.x.extend.controller('_oneWayBinds', function() {
             return function() {
                 var binds = new $();
                 var controller = this;
-                this.$().find('[data-x-bind]:not(.x-mvvm)').each(function() {
+                this.$('[data-x-bind]').each(function() {
+                    var bindElem = this;
+                    if ($.x._myController(bindElem) === controller._id) {
+                        binds.push(bindElem);
+                    }
+                });
+                return binds;
+            };
+        });
+
+        $.x.extend.controller('_twoWayBinds', function() {
+            return function() {
+                var binds = new $();
+                var controller = this;
+                this.$('[data-x-bind]:not(.x-mvvm)').each(function() {
                     var bindElem = this;
                     if ($.x._myController(bindElem) === controller._id) {
                         binds.push(bindElem);
@@ -104,7 +118,7 @@
          * Extend Apply to manage bindings
          */
         $.x.extend.apply(function(controller) {
-            var binds = controller._binds();
+            var binds = controller._twoWayBinds();
             if (binds.length > 0) {
                 binds.on('change.x keyup.x', function() {
                     if (this.tagName === 'INPUT' && (this.type === 'text' || this.type === 'password')) {
@@ -128,7 +142,7 @@
                 binds.addClass('x-mvvm');
             }
             //apply bindings values
-            controller._binds().each(function() {
+            controller._oneWayBinds().each(function() {
                 var binding = this;
                 //get the element
                 var elem = $(binding);
