@@ -157,7 +157,6 @@
             controller.update(function() {
                 return 'passed';
             });
-            debugger;
             assert.ok(controller._update[0]() === 'passed', '_update Function Replaced Properly Check');
         });
 

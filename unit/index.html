@@ -121,7 +121,7 @@
     <script type="text/javascript">
         (function($) {
             $(function() {
-                $.x.plugin('list', true, function(controller, element) {
+                $.x.plugin('list', true, function(element, controller) {
                     controller.update(function() {
                         var data = controller.accessor(controller.$().attr('data-list'));
                         var title = controller.$().attr('data-title');
@@ -169,9 +169,9 @@
                     element.append('<input type="text" data-x-bind="test">');
                 });
 
-                $.x.controller('pluginWithOutController', function(controller, view) {
+                $.x.controller('pluginWithOutController', function(controller) {
                     controller.update(function() {
-                        console.log(view);
+                        console.log(controller);
                     });
                 });
             });

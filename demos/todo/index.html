@@ -57,13 +57,13 @@
         <script type="text/javascript">
             (function ($) {
                 $(function () {
-                    $.x.plugin('todolist', true, function (controller, view, $element) {
+                    $.x.plugin('todolist', true, function (controller, $element) {
                         var dataSource = $element.attr('data-source');
                         if (dataSource) {
                             $element.append('<input type="text" class="text" data-x-bind="' + dataSource + '.newTodo" placeholder="New todo">');
                             $element.append('<ul></ul>');
                             controller.update(function () {
-                                console.log(view);
+                                console.log(controller);
                                 $element.find('ul').empty();
                                 if (view.accessor(dataSource).todos.length > 0) {
                                     $.each(view.accessor(dataSource).todos, function (index, todo) {

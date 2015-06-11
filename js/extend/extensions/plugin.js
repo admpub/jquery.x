@@ -62,7 +62,7 @@
                                 }
                                 //get the controller
                                 pluginController = $.x.controller(pluginControllerId);
-                                $.x._plugins[pluginName].handler(pluginController, $(plugin));
+                                $.x._plugins[pluginName].handler($(plugin), pluginController);
                             } else {
                                 reApply = true;
                                 $.x._plugins[pluginName].handler($(plugin));

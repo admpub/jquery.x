@@ -9,7 +9,7 @@
 
         $.x.extend.controller('update', function() {
             return function(updateHandler) {
-                if(!this._update){
+                if (!this._update) {
                     this._update = [];
                 }
                 this._update.push(updateHandler);
@@ -34,11 +34,13 @@
                     }
                 });
                 //run all update functions for this controller
-                $.each(this._apply, function(i, updateFunction) {
-                    if ($.type(updateFunction) === $.x.type.function) {
-                        updateFunction(controller);
-                    }
-                });
+                if (this._update) {
+                    $.each(this._update, function(i, updateFunction) {
+                        if ($.type(updateFunction) === $.x.type.function) {
+                            updateFunction(controller);
+                        }
+                    });
+                }
                 //run apply functions
                 $.each(this._apply, function(i, applyFunction) {
                     if ($.type(applyFunction) === $.x.type.function) {
@@ -88,7 +90,7 @@
             return function() {
                 var binds = new $();
                 var controller = this;
-                this.$().find('[data-x-bind]').each(function() {
+                this.$().find('[data-x-bind]:not(.x-mvvm)').each(function() {
                     var bindElem = this;
                     if ($.x._myController(bindElem) === controller._id) {
                         binds.push(bindElem);
