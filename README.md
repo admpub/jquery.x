@@ -117,10 +117,47 @@ In an instance where you have controllers that are nested, child controllers wil
 This is where the MVVM magic happens. This piece of the process is responsible for applying changes to the view from the underlying data model. Whenever the Apply Loop is invoked, the jQuery.X works behind the scenes to automate the changes to the view.
 
 jQuery.X provides two different ways to invoke the Apply Loop.
+
 1. **data-x-bind** If this attribute is placed on an HTML field jQuery.X will automatically watch for changes to that field. When a change is made to a data-x-bind field, the jQuery.X will initialize the Apply Loop. Which, in turn, will update the underlying data source, on the controller, and then update the view.
 2. **controller.apply();** When you grammatically make a change to the underlying data in the view, you can manually call `controller.apply()`, which will invoke the Apply Loop and update the view with the corresponding data.
 
 ## Controller's Update Function
+
+Every controller has an update method that allows you to add logic to the Apply Loop for that controller. This is where you will place code that will update your DOM based on you controller's data. Example:
+
+	controller.update(function(){
+		//dom manipulation code here
+	});
+
+Let us look at a more complicated situation. Let's say that you have a controller that wraps a `table` HTML element that you want to show/hide based on the condition of a checkbox. Here is the code:
+
+	<div data-x-controller="tableController">
+	    <input type="checkbox" data-x-bind="showTable" />
+	    <table>
+	        ...
+	    </table>
+	</div>
+	<script type="text/javascript">
+	    (function($) {
+	        $(function() {
+	            $.x.controller('tableController', function(controller) {
+	                //set the initial state of the checkbox and table
+	                controller.showTable = false;
+	                //get the jquery object for the table in this controller only
+	                $table = controller.$('table');
+
+	                //update view when a change is applied
+	                controller.update(function(){
+	                    if(controller.showTable) {
+	                        $table.show();
+	                    } else {
+	                        $table.hide();
+	                    }
+	                });
+	            });
+	        });
+	    })(jQuery);
+	</script>
 
 ## Plugins
 
