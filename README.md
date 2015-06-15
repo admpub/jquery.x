@@ -40,7 +40,7 @@ MVVM is a modern interpretation of your traditional MVC, but with a twist. In a 
 
 ## jQuery.X vs. AngularJS
 
-jQuery.X and Angular are very similar in the implementation of MVVM. When we originally started planning the development of jQuery.X, we tried very hard not to be Angular. Angular is Awesome! We did not want to replicate it, there is no need. The developers who built and maintain Angular are much smarter than we are. Over the past several years Angular has set the standard in the implementation of the MVVM design pattern in JavaScript. So we decided to make our framework for a different need than what Angular solves. Angular is very powerful and provides a good foundation for enterprise level application development. jQUery.X, although just as powerful, provides a bare bones foundation and an easier implementation for your projects. We are targeting developers who are most familiar with jQuery and want an easy transition to implement MVVM within their projects.
+jQuery.X and Angular are very similar in the implementation of MVVM. When we originally started planning the development of jQuery.X, we tried very hard not to be Angular. Angular is Awesome! We did not want to replicate it, there is no need. The developers who built and maintain Angular are much smarter than we are. Over the past several years Angular has set the standard in the implementation of the MVVM design pattern in JavaScript. So we decided to make our framework for a different need than what Angular solves. Angular is very powerful and provides a good foundation for enterprise level application development. jQuery.X, although just as powerful, provides a bare bones foundation and an easier implementation for your projects. We are targeting developers who are most familiar with jQuery and want an easy transition to implement MVVM within their projects.
 
 jQuery.X differs from Angular in many distinct ways:
 
@@ -161,9 +161,105 @@ Let us look at a more complicated situation. Let's say that you have a controlle
 
 ## Plugins
 
-## Custom Events
+Plugins provide you a way to build a reusable JavaScript components that can be applied direclty to DOM Nodes in a similar way you can apply visual changes by applying classes and some css. Example:
 
-## Extending X
+	(function($) {
+	    $(function() {
+	        //this plugin will apply css to the element you apply it to
+	        //and turn the element's color red
+	        $.x.plugin('red', function($element){
+	            $element.css({color: 'red'});
+	        });
+
+	        //a plugin can only be applied to elements defined within a controller
+	        //this code is initializing a controller on the DOM.
+	        $.x.controller('controller');
+	    });
+	})(jQuery);
+
+The HTML Markup will look like this:
+
+	<div data-x-controller="controller">
+		<p data-x-plugin="red">This will be red</p>
+	</div>
+
+Multiple jQuery.X Plugins can be applied to the same node:
+
+	<p data-x-plugin="red blue green">This will be red</p>
+
+**Plugins With Controllers**
+
+In the example above, three different plugins will run on the same node. Plugins are executed in the order that they are defined. Red will run first, then blue, then green. Which will result in a final text color of green.
+
+jQuery.X plugins can get really complicated. If a Plugin get complicated enough, it may need its own controller to manage its interaction between its underlying data model and its view. If you find yourself in this situation, there is a solution for adding an anonymous controller to your plugin. Since the controller is anonymous, jQuery.X will allow you to use the same plugin over and over again on different nodes. The anonymous controller will become a child of the controller your plugin in defined in. So that means that you still have access to the data of your original controller to reference or change. Example:
+
+	(function($) {
+		$(function() {
+			$.x.plugin('list', true, function($element, controller) {
+				$element.empty();
+				//returns the list data defined in the parent controller
+				var listData = controller.accessor($element.attr('data-src'));
+				if (listData.length > 0) {
+					$.each(listData, function(i, data) {
+						$element.append('<li>' + data + '</li>');
+					});
+				}
+			});
+			$.x.controller('parent', function(controller) {
+				controller.list = ['a', 'b', 'c'];
+			});
+		});
+	})(jQuery);
+
+HTML Markup:
+
+	<div data-x-controller="parent">
+		<ul data-x-plugin="list" data-src="list"></ul>
+	</div>
+
+## Extending jQuery.X
+
+jQuery.X was built with extensibility in mind from the very beginning. It has always been our goal to make it easy to extend jQuery.X so that we can maintain a simple library but build anything that we want. jQuery.X allows you to easily extend its three major compontents, the **X Object**, the **Controller Object**, and the **Apply Loop**. 
+
+**Extending the X Object**
+
+To extend the X object you will use the following syntax:
+
+    $.x.extend.x('prop', function(){
+        //the 'this' keyword provides access to the x object itself.
+        var xObj = this;
+        return {
+            value: 'extened'
+        };
+    });
+    
+Notice that the `extend.x()` method takes in two parameters. The first parameter is a string that represents the property you want to extend onto the X object. The second parameter is a function that returns what you intend the property to be. In the example above, you will notice that the function is returning and object with a property of 'value' with a value of 'extended'. When all this is said and done, you will be able to access the extened property by `$.x.prop` which will return:
+
+    {
+        value: 'extended'
+    }
+    
+**Extending the Controller Object**
+
+Extending the Controller Object will add apply the extension to all controllers created. The extension is applied to the $.x._abstractController which every controller will inheret from. In a similar way to extending the X Object, the Controller Object can be extended like this:
+
+    $.x.extend.x('getControllerId', function(){
+        //the 'this' keyword provides access to the instance Controller.
+        var controllerObj = this;
+        //the function being returned here will be applied to the
+        //getControllerId property on every Controller Object.
+        return function(){
+            return controllerObj._id;
+        };
+    });
+    
+**Extending the Apply Loop**
+
+Whenever the apply loop is invoked, all Apply Loop Extensions are run independently. Extending the Apply Loop is a rather advanced operation within jQuery.X. An example of extending the apply loop might be:
+
+    $.x.extend.apply(function(controller){
+        console.log(controller._id);
+    });
 
 ## Library View Attributes
 
@@ -174,14 +270,34 @@ Let us look at a more complicated situation. Let's say that you have a controlle
 * **data-x-bind** - This attribute is used to bind the value of a property in a View Object to the view itself. As a value it is expecting the dot-notation path to the property you want to bind it to.
 
 		<span data-x-bind="path.to.property"></span>
+		
+* **data-x-plugin** - This attribute is responsible for binding all plugin definitions to the DOM nodes you want to apply them to.
+
+        <div data-x-plugin="plugin1 plugin2"></div>
 
 ## Library API Documentation
+
+* **$.x.broadcast(eventId[, param])**
+* **$.x.controller(controllerId[, initHandler])**
+* **$.x.error(message)**
+* **$.x.extend.x(propertyId, extensionHandler)**
+* **$.x.extend.controller(propertyId, extensionHandler)**
+* **$.x.extend.apply([applyBefore,] applyHandler)**
+* **$.x.isController(controllerId)**
+* **$.x.on(eventId, eventHandler)**
+* **$.x.plugin(pluginId, [hasOwnController,] pluginHandler)**
+* **controller.$(selector)**
+* **controller.accessor(property[, value])**
+* **controller.apply()**
+* **controller.children()**
+* **controller.parent()**
+* **controller.update(updateHandler)**
 
 ##Acknowledgements
 
 This library was the brain child of [Joshua L Johnson](https://github.com/joshualjohnson "Joshua L Johnson"), [Jake Quattrocchi](https://github.com/globaljake "Jake Quattrocchi"), and [Arian Caraballo](https://www.linkedin.com/pub/arian-caraballo/33/3a2/40bhttps://www.linkedin.com/pub/arian-caraballo/33/3a2/40b "Arian Caraballo")
 
-Special thanks to both Jake and Arian for all of the hours of your personal time brain storming critical components of **X**.
+Special thanks to both Jake and Arian for all of the hours of your personal time brain storming critical components of **jQuery.X**.
 
 ## License
 MIT license - [http://www.opensource.org/licenses/mit-license.php](http://www.opensource.org/licenses/mit-license.php "MIT license")

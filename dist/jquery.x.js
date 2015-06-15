@@ -51,6 +51,16 @@
                 if (!controllerId) {
                     return this.error('A controller ID is required');
                 }
+
+                //variable used to determine if we need to run controller's apply method
+                var runApply = false;
+
+                //if there is not an init handler and controller is not defined, we need to run the
+                //apply method of the controller to initialize the controller's bindings and
+                //plugins
+                if(!initHandler && !this.isController(controllerId)) {
+                    runApply = true;
+                }
                 //determine if controllers defined
                 if (!this.isController(controllerId)) {
                     //if not defined make sure that it has a binding
@@ -80,9 +90,12 @@
                         return controller;
                     }(controllerId);
                 }
-
+                //if initHandler run the handler and set the apply method to run
                 if (initHandler) {
+                    runApply = true;
                     initHandler(this._controllers[controllerId]);
+                }
+                if(runApply) {
                     this._controllers[controllerId].apply();
                 }
 

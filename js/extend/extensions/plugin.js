@@ -35,7 +35,7 @@
 
         $.x.extend.apply(function (controller) {
             //get all of the plugins
-            var plugins = controller.$().find('[data-x-plugin]:not(.x-plugin)');
+            var plugins = controller.$('[data-x-plugin]:not(.x-plugin)');
             if (plugins && plugins.length > 0) {
                 var reApply = false;
                 $.each(plugins, function (i, plugin) {
@@ -57,7 +57,7 @@
                                 if ($(plugin).attr('data-x-controller')) {
                                     pluginControllerId = $(plugin).attr('data-x-controller');
                                 } else {
-                                    pluginControllerId = 'plugin-x-' + Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+                                    pluginControllerId = 'plugin-x-' + Math.floor((1 + Math.random()) * 0x1000000).toString(16).substring(1);
                                     $(plugin).attr('data-x-controller', pluginControllerId);
                                 }
                                 //get the controller
