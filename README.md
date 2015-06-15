@@ -277,12 +277,29 @@ Whenever the apply loop is invoked, all Apply Loop Extensions are run independen
 
 ## Library API Documentation
 
-* **$.x.broadcast(eventId[, param])**
-* **$.x.controller(controllerId[, initHandler])**
-* **$.x.error(message)**
-* **$.x.extend.x(propertyId, extensionHandler)**
-* **$.x.extend.controller(propertyId, extensionHandler)**
-* **$.x.extend.apply([applyBefore,] applyHandler)**
+* **$.x.broadcast(eventId[, param])** This method is used to broadcast an event that occured. The event will be identified by the `eventId` it was given. You may also pass data into the function handling the event.
+    * eventId - string - The string that represents the event that occurred.
+    * param - mixed - The data you want to pass into the function handling this event.
+
+* **$.x.controller(controllerId[, initHandler])** This method is used to get the controller object identified by the `controllerId`
+    * controllerId - string - The ID of the controller you would like to be returned.
+    * initHandler (not required) - function - A function you would like to use to initialize the controller.
+    
+* **$.x.error(message)** This method is used to Throw errors within the runtime.
+    * message - string - The message you would like to appear in your error.
+
+* **$.x.extend.x(propertyId, extensionHandler)** This method is used to extend the X Object.
+    * propertyId - string - The property you would like to add to the X Object.
+    * extensionHandler - function - A function you use to define the extension.
+    
+* **$.x.extend.controller(propertyId, extensionHandler)** This method is used to extend the Controller Object.
+    * propertyId - string - The property you would like to add to the Controller Object.
+    * extensionHandler - function - A function you use to define the extension.
+
+* **$.x.extend.apply([applyBefore,] applyHandler)** This method is used to extend the Apply Loop.
+    * applyBefore - boolean - True if you would like this apply to be executed before the Controller's Update Function or after.
+    * applyHandler - function - A function used to define the Apply Loop.
+
 * **$.x.isController(controllerId)**
 * **$.x.on(eventId, eventHandler)**
 * **$.x.plugin(pluginId, [hasOwnController,] pluginHandler)**
