@@ -219,7 +219,7 @@ HTML Markup:
 
 ## Extending jQuery.X
 
-jQuery.X was built with extensibility in mind from the very beginning. It has always been our goal to make it easy to extend jQuery.X so that we can maintain a simple library but build anything that we want. jQuery.X allows you to easily extend its three major compontents, the **X Object**, the **Controller Object**, and the **Apply Loop**. 
+jQuery.X was built with extensibility in mind from the very beginning. It has always been our goal to make it easy to extend jQuery.X so that we can maintain a simple library but build anything that we want. jQuery.X allows you to easily extend its three major compontents, the **X Object**, the **Controller Object**, and the **Apply Loop**.
 
 **Extending the X Object**
 
@@ -232,13 +232,13 @@ To extend the X object you will use the following syntax:
             value: 'extened'
         };
     });
-    
+
 Notice that the `extend.x()` method takes in two parameters. The first parameter is a string that represents the property you want to extend onto the X object. The second parameter is a function that returns what you intend the property to be. In the example above, you will notice that the function is returning and object with a property of 'value' with a value of 'extended'. When all this is said and done, you will be able to access the extened property by `$.x.prop` which will return:
 
     {
         value: 'extended'
     }
-    
+
 **Extending the Controller Object**
 
 Extending the Controller Object will add apply the extension to all controllers created. The extension is applied to the $.x._abstractController which every controller will inheret from. In a similar way to extending the X Object, the Controller Object can be extended like this:
@@ -252,7 +252,7 @@ Extending the Controller Object will add apply the extension to all controllers 
             return controllerObj._id;
         };
     });
-    
+
 **Extending the Apply Loop**
 
 Whenever the apply loop is invoked, all Apply Loop Extensions are run independently. Extending the Apply Loop is a rather advanced operation within jQuery.X. An example of extending the apply loop might be:
@@ -270,7 +270,7 @@ Whenever the apply loop is invoked, all Apply Loop Extensions are run independen
 * **data-x-bind** - This attribute is used to bind the value of a property in a View Object to the view itself. As a value it is expecting the dot-notation path to the property you want to bind it to.
 
 		<span data-x-bind="path.to.property"></span>
-		
+
 * **data-x-plugin** - This attribute is responsible for binding all plugin definitions to the DOM nodes you want to apply them to.
 
         <div data-x-plugin="plugin1 plugin2"></div>
@@ -279,30 +279,47 @@ Whenever the apply loop is invoked, all Apply Loop Extensions are run independen
 
 * **$.x.broadcast(eventId[, param])** This method is used to broadcast an event that occured. The event will be identified by the `eventId` it was given. You may also pass data into the function handling the event.
     * eventId - string - The string that represents the event that occurred.
-    * param - mixed - The data you want to pass into the function handling this event.
+    * param (not required) - mixed - The data you want to pass into the function handling this event.
+	* returns void;
 
 * **$.x.controller(controllerId[, initHandler])** This method is used to get the controller object identified by the `controllerId`
     * controllerId - string - The ID of the controller you would like to be returned.
     * initHandler (not required) - function - A function you would like to use to initialize the controller.
-    
+	* returns - object - The controller object.
+
 * **$.x.error(message)** This method is used to Throw errors within the runtime.
     * message - string - The message you would like to appear in your error.
+	* returns - object - The error object.
 
 * **$.x.extend.x(propertyId, extensionHandler)** This method is used to extend the X Object.
     * propertyId - string - The property you would like to add to the X Object.
     * extensionHandler - function - A function you use to define the extension.
-    
+	* returns void
+
 * **$.x.extend.controller(propertyId, extensionHandler)** This method is used to extend the Controller Object.
     * propertyId - string - The property you would like to add to the Controller Object.
     * extensionHandler - function - A function you use to define the extension.
+	* returns void
 
 * **$.x.extend.apply([applyBefore,] applyHandler)** This method is used to extend the Apply Loop.
-    * applyBefore - boolean - True if you would like this apply to be executed before the Controller's Update Function or after.
+    * applyBefore (not required) - boolean - True if you would like this apply to be executed before the Controller's Update Function or after.
     * applyHandler - function - A function used to define the Apply Loop.
+	returns void
 
-* **$.x.isController(controllerId)**
-* **$.x.on(eventId, eventHandler)**
-* **$.x.plugin(pluginId, [hasOwnController,] pluginHandler)**
+* **$.x.isController(controllerId)** This method is used to determine if a controller exists.
+	* controllerId - string - The ID of the controller you want to checkbox.
+	* returns - boolean - Whether there is a controller for the controllerId.
+
+* **$.x.on(eventId, eventHandler)** This method is used to bind a callback to a custom event broadcasted by `$.x.broadcast(eventId)`.
+	* eventId - string - The ID of the event you want to bind to.
+	* eventHandler - The function that will be executed when the event is broadcasted.
+	* returns void
+
+* **$.x.plugin(pluginId, [hasOwnController,] pluginHandler)** This method is used to register new plugins.
+	* pluginId - string - The ID of the plugin you want to define.
+	* hasOwnController (not required) - boolean - Whether or not to wrap plugin in its own controller.
+	* pluginHandler - function - A function used to define the plugin.
+	
 * **controller.$(selector)**
 * **controller.accessor(property[, value])**
 * **controller.apply()**
