@@ -320,12 +320,26 @@ Whenever the apply loop is invoked, all Apply Loop Extensions are run independen
 	* hasOwnController (not required) - boolean - Whether or not to wrap plugin in its own controller.
 	* pluginHandler - function - A function used to define the plugin.
 	
-* **controller.$(selector)**
-* **controller.accessor(property[, value])**
-* **controller.apply()**
-* **controller.children()**
-* **controller.parent()**
-* **controller.update(updateHandler)**
+* **controller.$([selector])** This method is used to query for nodes within the region of the controller. This method acts as a jQuery proxy but locks you down to the region of the controller.
+    * selector (not requierd) - string - The CSS selector you would like to query for.
+    * returns - object - jQuery object containing nodes that match selector criteria. If no selector is present, the controller node will be returned as a jQuery object.
+
+* **controller.accessor(property[, value])** This method allows you to access data on the controller using dot notation in the property. If you pass in a value, it will set the value for the given property. The value of the given property will be returned if no value parameter is present.
+    * proptery - string - The dot notation to the property you want to access i.e. 'data.users.current'.
+    * value (not required) - mixed - The data you want to set for the given property.
+    * returns - mixed - If the value parameter is set, void will be returned, othersie
+    
+* **controller.apply()** This method is used to invoke the controller's Apply Loop.
+    * returns void
+
+
+* **controller.children()** This method is used to gain access to the children of the current controller.
+    * returns - array - An array of immediate children controllers.
+
+* **controller.parent()** This method is used to gain access to the parent of the current controller.
+    *returns - object - The parent controller object of the current controller.
+
+* **controller.update(updateHandler)** This method is used to add an update function to a controller's Apply Loop.
 
 ##Acknowledgements
 
