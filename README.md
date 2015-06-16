@@ -278,68 +278,84 @@ Whenever the apply loop is invoked, all Apply Loop Extensions are run independen
 ## Library API Documentation
 
 * **$.x.broadcast(eventId[, param])** This method is used to broadcast an event that occured. The event will be identified by the `eventId` it was given. You may also pass data into the function handling the event.
+    
     * eventId - string - The string that represents the event that occurred.
     * param (not required) - mixed - The data you want to pass into the function handling this event.
 	* returns void;
 
 * **$.x.controller(controllerId[, initHandler])** This method is used to get the controller object identified by the `controllerId`
+    
     * controllerId - string - The ID of the controller you would like to be returned.
     * initHandler (not required) - function - A function you would like to use to initialize the controller.
 	* returns - object - The controller object.
 
 * **$.x.error(message)** This method is used to Throw errors within the runtime.
+    
     * message - string - The message you would like to appear in your error.
 	* returns - object - The error object.
 
 * **$.x.extend.x(propertyId, extensionHandler)** This method is used to extend the X Object.
+    
     * propertyId - string - The property you would like to add to the X Object.
     * extensionHandler - function - A function you use to define the extension.
 	* returns void
 
 * **$.x.extend.controller(propertyId, extensionHandler)** This method is used to extend the Controller Object.
+    
     * propertyId - string - The property you would like to add to the Controller Object.
     * extensionHandler - function - A function you use to define the extension.
 	* returns void
 
 * **$.x.extend.apply([applyBefore,] applyHandler)** This method is used to extend the Apply Loop.
+    
     * applyBefore (not required) - boolean - True if you would like this apply to be executed before the Controller's Update Function or after.
     * applyHandler - function - A function used to define the Apply Loop.
 	returns void
 
 * **$.x.isController(controllerId)** This method is used to determine if a controller exists.
+	
 	* controllerId - string - The ID of the controller you want to checkbox.
 	* returns - boolean - Whether there is a controller for the controllerId.
 
 * **$.x.on(eventId, eventHandler)** This method is used to bind a callback to a custom event broadcasted by `$.x.broadcast(eventId)`.
+	
 	* eventId - string - The ID of the event you want to bind to.
 	* eventHandler - The function that will be executed when the event is broadcasted.
 	* returns void
 
 * **$.x.plugin(pluginId, [hasOwnController,] pluginHandler)** This method is used to register new plugins.
+	
 	* pluginId - string - The ID of the plugin you want to define.
 	* hasOwnController (not required) - boolean - Whether or not to wrap plugin in its own controller.
 	* pluginHandler - function - A function used to define the plugin.
 	
 * **controller.$([selector])** This method is used to query for nodes within the region of the controller. This method acts as a jQuery proxy but locks you down to the region of the controller.
+    
     * selector (not requierd) - string - The CSS selector you would like to query for.
     * returns - object - jQuery object containing nodes that match selector criteria. If no selector is present, the controller node will be returned as a jQuery object.
 
 * **controller.accessor(property[, value])** This method allows you to access data on the controller using dot notation in the property. If you pass in a value, it will set the value for the given property. The value of the given property will be returned if no value parameter is present.
+    
     * proptery - string - The dot notation to the property you want to access i.e. 'data.users.current'.
     * value (not required) - mixed - The data you want to set for the given property.
     * returns - mixed - If the value parameter is set, void will be returned, othersie
     
 * **controller.apply()** This method is used to invoke the controller's Apply Loop.
+
     * returns void
 
 
 * **controller.children()** This method is used to gain access to the children of the current controller.
+    
     * returns - array - An array of immediate children controllers.
 
 * **controller.parent()** This method is used to gain access to the parent of the current controller.
-    *returns - object - The parent controller object of the current controller.
+    
+    * returns - object - The parent controller object of the current controller.
 
 * **controller.update(updateHandler)** This method is used to add an update function to a controller's Apply Loop.
+
+    * returns void
 
 ##Acknowledgements
 
