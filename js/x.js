@@ -1,13 +1,13 @@
-(function($) {
+(function ($) {
     "use strict";
-    var x = function() {
+    var x = function () {
         var x = {
             _abstractController: {
                 _id: false,
-                _addExtension: function(extensionId, extension) {
+                _addExtension: function (extensionId, extension) {
                     this[extensionId] = extension;
                 },
-                $: function(selector) {
+                $: function (selector) {
                     var $controller = $('[data-x-controller="' + this._id + '"]');
                     if (selector) {
                         return $controller.find(selector);
@@ -15,10 +15,10 @@
                     return $controller;
                 }
             },
-            _addExtension: function(extensionId, extension) {
+            _addExtension: function (extensionId, extension) {
                 this[extensionId] = extension;
             },
-            _myController: function(domNode) {
+            _myController: function (domNode) {
                 var controllerNode = $(domNode).parents('[data-x-controller]')[0];
                 if (controllerNode) {
                     return controllerNode.attributes['data-x-controller'].value;
@@ -27,8 +27,9 @@
                 }
             },
             _controllers: {},
+            _errors: [],
             extend: {
-                x: function(extensionId, extensionFactory) {
+                x: function (extensionId, extensionFactory) {
                     if ($.type(extensionId) !== $.x.type.string || !extensionId) {
                         return $.x.error('Extension ID must be a string');
                     }
@@ -37,7 +38,7 @@
                     }
                     $.x._addExtension(extensionId, extensionFactory());
                 },
-                controller: function(extensionId, extensionFactory) {
+                controller: function (extensionId, extensionFactory) {
                     if ($.type(extensionId) !== $.x.type.string || !extensionId) {
                         return $.x.error('Extension ID must be a string');
                     }
@@ -47,7 +48,7 @@
                     $.x._abstractController._addExtension(extensionId, extensionFactory());
                 }
             },
-            controller: function(controllerId, initHandler) {
+            controller: function (controllerId, initHandler) {
                 if (!controllerId) {
                     return this.error('A controller ID is required');
                 }
@@ -58,7 +59,7 @@
                 //if there is not an init handler and controller is not defined, we need to run the
                 //apply method of the controller to initialize the controller's bindings and
                 //plugins
-                if(!initHandler && !this.isController(controllerId)) {
+                if (!initHandler && !this.isController(controllerId)) {
                     runApply = true;
                 }
                 //determine if controllers defined
@@ -73,7 +74,7 @@
                         return this.error('Controllers can only be bound once');
                     }
                     var x = this;
-                    this._controllers[controllerId] = function(controllerId) {
+                    this._controllers[controllerId] = function (controllerId) {
                         var controller;
                         var allParentsDom = $('[data-x-controller=' + controllerId + ']').parents('[data-x-controller]');
                         if (allParentsDom.length > 0) {
@@ -95,24 +96,26 @@
                     runApply = true;
                     initHandler(this._controllers[controllerId]);
                 }
-                if(runApply) {
+                if (runApply) {
                     this._controllers[controllerId].apply();
                 }
 
                 return this._controllers[controllerId];
             },
-            isController: function(controllerId) {
+            isController: function (controllerId) {
                 if (this._controllers[controllerId]) {
                     return true;
                 }
                 return false;
             },
-            error: function(message) {
+            error: function (message) {
                 var errorHeading = '' +
-                    '            _  _      ___  ____  ____ __   ___\n' +
-                    ' ________  | |/ /    / _ |  __/|  __/ _ `|  __|  ________\n' +
-                    '/___/___/   >  <    |  __/ |   | | | (_) | |    /___/___/\n' +
-                    '           /_/|_|    |___|_|   |_| |____/|_|\n';
+                        '                ██╗  ██╗    ███████╗██████╗ ██████╗  ██████╗ ██████╗ ██╗ \n' +
+                        '                ╚██╗██╔╝    ██╔════╝██╔══██╗██╔══██╗██╔═══██╗██╔══██╗██║ \n' +
+                        '█████╗█████╗     ╚███╔╝     █████╗  ██████╔╝██████╔╝██║   ██║██████╔╝██║    █████╗█████╗ \n' +
+                        '╚════╝╚════╝     ██╔██╗     ██╔══╝  ██╔══██╗██╔══██╗██║   ██║██╔══██╗╚═╝    ╚════╝╚════╝ \n' +
+                        '                ██╔╝ ██╗    ███████╗██║  ██║██║  ██║╚██████╔╝██║  ██║██╗ \n' +
+                        '                ╚═╝  ╚═╝    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝ \n';
                 if (window.console && console.debug) {
                     console.debug(errorHeading);
                 }
@@ -120,6 +123,7 @@
                 if (window.console && console.log) {
                     console.log(error.stack);
                 }
+                this._errors.push((Date.now()).toString() + ': ' + message);
                 return error;
             }
         };

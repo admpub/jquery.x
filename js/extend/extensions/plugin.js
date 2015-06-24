@@ -1,3 +1,7 @@
+/*
+ * This plugin is responsible for adding plugin functionality to jQuery.X
+ */
+
 (function ($) {
     $(function () {
         $.x.extend.x('_plugins', function () {

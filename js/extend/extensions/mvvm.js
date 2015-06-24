@@ -1,14 +1,17 @@
-(function($) {
-    $(function() {
+/*
+ * This extension is responsible for adding MVVM to jQuery.X
+ */
+(function ($) {
+    $(function () {
         /*
          * Extend the controller object to add the update functionality
          */
-        $.x.extend.controller('_update', function() {
+        $.x.extend.controller('_update', function () {
             return false;
         });
 
-        $.x.extend.controller('update', function() {
-            return function(updateHandler) {
+        $.x.extend.controller('update', function () {
+            return function (updateHandler) {
                 if (!this._update) {
                     this._update = [];
                 }
@@ -16,33 +19,33 @@
             };
         });
 
-        $.x.extend.controller('_applyBefore', function() {
+        $.x.extend.controller('_applyBefore', function () {
             return [];
         });
 
-        $.x.extend.controller('_apply', function() {
+        $.x.extend.controller('_apply', function () {
             return [];
         });
 
-        $.x.extend.controller('apply', function() {
-            return function() {
+        $.x.extend.controller('apply', function () {
+            return function () {
                 var controller = this;
                 //runt apply before functions
-                $.each(this._applyBefore, function(i, applyFunction) {
+                $.each(this._applyBefore, function (i, applyFunction) {
                     if ($.type(applyFunction) === $.x.type.function) {
                         applyFunction(controller);
                     }
                 });
                 //run all update functions for this controller
                 if (this._update) {
-                    $.each(this._update, function(i, updateFunction) {
+                    $.each(this._update, function (i, updateFunction) {
                         if ($.type(updateFunction) === $.x.type.function) {
                             updateFunction(controller);
                         }
                     });
                 }
                 //run apply functions
-                $.each(this._apply, function(i, applyFunction) {
+                $.each(this._apply, function (i, applyFunction) {
                     if ($.type(applyFunction) === $.x.type.function) {
                         applyFunction(controller);
                     }
@@ -50,7 +53,7 @@
 
                 var childrenControllers = this.children();
                 if (childrenControllers) {
-                    $.each(childrenControllers, function(i, childController) {
+                    $.each(childrenControllers, function (i, childController) {
                         childController.apply();
                     });
                 }
@@ -62,7 +65,7 @@
          * $.x.extend.apply([applyBeforeUpdate], applyFunction);
          * $.x.extend.apply(applyFunction);
          */
-        $.x.extend.apply = function(a, b) {
+        $.x.extend.apply = function (a, b) {
             var applyBeforeUpdate, applyFunction;
             if ($.type(a) === $.x.type.boolean) {
                 applyBeforeUpdate = a;
@@ -86,11 +89,11 @@
         /**
          * Extend the controller to manage keep track of its bindings.
          */
-        $.x.extend.controller('_oneWayBinds', function() {
-            return function() {
+        $.x.extend.controller('_oneWayBinds', function () {
+            return function () {
                 var binds = new $();
                 var controller = this;
-                this.$('[data-x-bind]').each(function() {
+                this.$('[data-x-bind]').each(function () {
                     var bindElem = this;
                     if ($.x._myController(bindElem) === controller._id) {
                         binds.push(bindElem);
@@ -100,11 +103,11 @@
             };
         });
 
-        $.x.extend.controller('_twoWayBinds', function() {
-            return function() {
+        $.x.extend.controller('_twoWayBinds', function () {
+            return function () {
                 var binds = new $();
                 var controller = this;
-                this.$('[data-x-bind]:not(.x-mvvm)').each(function() {
+                this.$('[data-x-bind]:not(.x-mvvm)').each(function () {
                     var bindElem = this;
                     if ($.x._myController(bindElem) === controller._id) {
                         binds.push(bindElem);
@@ -117,10 +120,10 @@
         /*
          * Extend Apply to manage bindings
          */
-        $.x.extend.apply(function(controller) {
+        $.x.extend.apply(function (controller) {
             var binds = controller._twoWayBinds();
             if (binds.length > 0) {
-                binds.on('change.x keyup.x', function() {
+                binds.on('change.x keyup.x', function () {
                     if (this.tagName === 'INPUT' && (this.type === 'text' || this.type === 'password')) {
                         if ($(this).data('val') !== this.value) {
                             controller.accessor($(this).attr('data-x-bind'), this.value);
@@ -142,7 +145,7 @@
                 binds.addClass('x-mvvm');
             }
             //apply bindings values
-            controller._oneWayBinds().each(function() {
+            controller._oneWayBinds().each(function () {
                 var binding = this;
                 //get the element
                 var elem = $(binding);

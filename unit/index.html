@@ -100,6 +100,7 @@
     <!--pattern extensions -->
     <script type="text/javascript" src="/js/extend/extensions/mvvm.js"></script>
     <script type="text/javascript" src="/js/extend/extensions/plugin.js"></script>
+    <script type="text/javascript" src="/js/extend/extensions/debug.js"></script>
 
     <!--unit -->
     <script type="text/javascript" src="/unit/unit.js"></script>
@@ -112,9 +113,6 @@
                     controller.form = {
                         value: 'Yes'
                     };
-                    controller.update(function() {
-                        console.log(controller);
-                    });
                 });
             });
         })(jQuery);
@@ -156,6 +154,7 @@
     <script type="text/javascript">
         (function($) {
             $(function() {
+               
                 $.x.plugin('red', function(element, attributes) {
                     element.css({
                         color: 'red'
@@ -171,12 +170,8 @@
                 $.x.plugin('textbox', function(element, attributes) {
                     element.append('<input type="text" data-x-bind="test">');
                 });
-
-                $.x.controller('pluginWithOutController', function(controller) {
-                    controller.update(function() {
-                        console.log(controller);
-                    });
-                });
+                
+                $.x.controller('pluginWithOutController');
             });
         })(jQuery);
     </script>

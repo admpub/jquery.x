@@ -1,13 +1,13 @@
-(function($) {
+(function ($) {
     "use strict";
-    var x = function() {
+    var x = function () {
         var x = {
             _abstractController: {
                 _id: false,
-                _addExtension: function(extensionId, extension) {
+                _addExtension: function (extensionId, extension) {
                     this[extensionId] = extension;
                 },
-                $: function(selector) {
+                $: function (selector) {
                     var $controller = $('[data-x-controller="' + this._id + '"]');
                     if (selector) {
                         return $controller.find(selector);
@@ -15,10 +15,10 @@
                     return $controller;
                 }
             },
-            _addExtension: function(extensionId, extension) {
+            _addExtension: function (extensionId, extension) {
                 this[extensionId] = extension;
             },
-            _myController: function(domNode) {
+            _myController: function (domNode) {
                 var controllerNode = $(domNode).parents('[data-x-controller]')[0];
                 if (controllerNode) {
                     return controllerNode.attributes['data-x-controller'].value;
@@ -27,8 +27,9 @@
                 }
             },
             _controllers: {},
+            _errors: [],
             extend: {
-                x: function(extensionId, extensionFactory) {
+                x: function (extensionId, extensionFactory) {
                     if ($.type(extensionId) !== $.x.type.string || !extensionId) {
                         return $.x.error('Extension ID must be a string');
                     }
@@ -37,7 +38,7 @@
                     }
                     $.x._addExtension(extensionId, extensionFactory());
                 },
-                controller: function(extensionId, extensionFactory) {
+                controller: function (extensionId, extensionFactory) {
                     if ($.type(extensionId) !== $.x.type.string || !extensionId) {
                         return $.x.error('Extension ID must be a string');
                     }
@@ -47,7 +48,7 @@
                     $.x._abstractController._addExtension(extensionId, extensionFactory());
                 }
             },
-            controller: function(controllerId, initHandler) {
+            controller: function (controllerId, initHandler) {
                 if (!controllerId) {
                     return this.error('A controller ID is required');
                 }
@@ -58,7 +59,7 @@
                 //if there is not an init handler and controller is not defined, we need to run the
                 //apply method of the controller to initialize the controller's bindings and
                 //plugins
-                if(!initHandler && !this.isController(controllerId)) {
+                if (!initHandler && !this.isController(controllerId)) {
                     runApply = true;
                 }
                 //determine if controllers defined
@@ -73,7 +74,7 @@
                         return this.error('Controllers can only be bound once');
                     }
                     var x = this;
-                    this._controllers[controllerId] = function(controllerId) {
+                    this._controllers[controllerId] = function (controllerId) {
                         var controller;
                         var allParentsDom = $('[data-x-controller=' + controllerId + ']').parents('[data-x-controller]');
                         if (allParentsDom.length > 0) {
@@ -95,24 +96,26 @@
                     runApply = true;
                     initHandler(this._controllers[controllerId]);
                 }
-                if(runApply) {
+                if (runApply) {
                     this._controllers[controllerId].apply();
                 }
 
                 return this._controllers[controllerId];
             },
-            isController: function(controllerId) {
+            isController: function (controllerId) {
                 if (this._controllers[controllerId]) {
                     return true;
                 }
                 return false;
             },
-            error: function(message) {
+            error: function (message) {
                 var errorHeading = '' +
-                    '            _  _      ___  ____  ____ __   ___\n' +
-                    ' ________  | |/ /    / _ |  __/|  __/ _ `|  __|  ________\n' +
-                    '/___/___/   >  <    |  __/ |   | | | (_) | |    /___/___/\n' +
-                    '           /_/|_|    |___|_|   |_| |____/|_|\n';
+                        '                ██╗  ██╗    ███████╗██████╗ ██████╗  ██████╗ ██████╗ ██╗ \n' +
+                        '                ╚██╗██╔╝    ██╔════╝██╔══██╗██╔══██╗██╔═══██╗██╔══██╗██║ \n' +
+                        '█████╗█████╗     ╚███╔╝     █████╗  ██████╔╝██████╔╝██║   ██║██████╔╝██║    █████╗█████╗ \n' +
+                        '╚════╝╚════╝     ██╔██╗     ██╔══╝  ██╔══██╗██╔══██╗██║   ██║██╔══██╗╚═╝    ╚════╝╚════╝ \n' +
+                        '                ██╔╝ ██╗    ███████╗██║  ██║██║  ██║╚██████╔╝██║  ██║██╗ \n' +
+                        '                ╚═╝  ╚═╝    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝ \n';
                 if (window.console && console.debug) {
                     console.debug(errorHeading);
                 }
@@ -120,6 +123,7 @@
                 if (window.console && console.log) {
                     console.log(error.stack);
                 }
+                this._errors.push((Date.now()).toString() + ': ' + message);
                 return error;
             }
         };
@@ -276,17 +280,20 @@
         });
     });
 })(jQuery);
-(function($) {
-    $(function() {
+/*
+ * This extension is responsible for adding MVVM to jQuery.X
+ */
+(function ($) {
+    $(function () {
         /*
          * Extend the controller object to add the update functionality
          */
-        $.x.extend.controller('_update', function() {
+        $.x.extend.controller('_update', function () {
             return false;
         });
 
-        $.x.extend.controller('update', function() {
-            return function(updateHandler) {
+        $.x.extend.controller('update', function () {
+            return function (updateHandler) {
                 if (!this._update) {
                     this._update = [];
                 }
@@ -294,33 +301,33 @@
             };
         });
 
-        $.x.extend.controller('_applyBefore', function() {
+        $.x.extend.controller('_applyBefore', function () {
             return [];
         });
 
-        $.x.extend.controller('_apply', function() {
+        $.x.extend.controller('_apply', function () {
             return [];
         });
 
-        $.x.extend.controller('apply', function() {
-            return function() {
+        $.x.extend.controller('apply', function () {
+            return function () {
                 var controller = this;
                 //runt apply before functions
-                $.each(this._applyBefore, function(i, applyFunction) {
+                $.each(this._applyBefore, function (i, applyFunction) {
                     if ($.type(applyFunction) === $.x.type.function) {
                         applyFunction(controller);
                     }
                 });
                 //run all update functions for this controller
                 if (this._update) {
-                    $.each(this._update, function(i, updateFunction) {
+                    $.each(this._update, function (i, updateFunction) {
                         if ($.type(updateFunction) === $.x.type.function) {
                             updateFunction(controller);
                         }
                     });
                 }
                 //run apply functions
-                $.each(this._apply, function(i, applyFunction) {
+                $.each(this._apply, function (i, applyFunction) {
                     if ($.type(applyFunction) === $.x.type.function) {
                         applyFunction(controller);
                     }
@@ -328,7 +335,7 @@
 
                 var childrenControllers = this.children();
                 if (childrenControllers) {
-                    $.each(childrenControllers, function(i, childController) {
+                    $.each(childrenControllers, function (i, childController) {
                         childController.apply();
                     });
                 }
@@ -340,7 +347,7 @@
          * $.x.extend.apply([applyBeforeUpdate], applyFunction);
          * $.x.extend.apply(applyFunction);
          */
-        $.x.extend.apply = function(a, b) {
+        $.x.extend.apply = function (a, b) {
             var applyBeforeUpdate, applyFunction;
             if ($.type(a) === $.x.type.boolean) {
                 applyBeforeUpdate = a;
@@ -364,11 +371,11 @@
         /**
          * Extend the controller to manage keep track of its bindings.
          */
-        $.x.extend.controller('_oneWayBinds', function() {
-            return function() {
+        $.x.extend.controller('_oneWayBinds', function () {
+            return function () {
                 var binds = new $();
                 var controller = this;
-                this.$('[data-x-bind]').each(function() {
+                this.$('[data-x-bind]').each(function () {
                     var bindElem = this;
                     if ($.x._myController(bindElem) === controller._id) {
                         binds.push(bindElem);
@@ -378,11 +385,11 @@
             };
         });
 
-        $.x.extend.controller('_twoWayBinds', function() {
-            return function() {
+        $.x.extend.controller('_twoWayBinds', function () {
+            return function () {
                 var binds = new $();
                 var controller = this;
-                this.$('[data-x-bind]:not(.x-mvvm)').each(function() {
+                this.$('[data-x-bind]:not(.x-mvvm)').each(function () {
                     var bindElem = this;
                     if ($.x._myController(bindElem) === controller._id) {
                         binds.push(bindElem);
@@ -395,10 +402,10 @@
         /*
          * Extend Apply to manage bindings
          */
-        $.x.extend.apply(function(controller) {
+        $.x.extend.apply(function (controller) {
             var binds = controller._twoWayBinds();
             if (binds.length > 0) {
-                binds.on('change.x keyup.x', function() {
+                binds.on('change.x keyup.x', function () {
                     if (this.tagName === 'INPUT' && (this.type === 'text' || this.type === 'password')) {
                         if ($(this).data('val') !== this.value) {
                             controller.accessor($(this).attr('data-x-bind'), this.value);
@@ -420,7 +427,7 @@
                 binds.addClass('x-mvvm');
             }
             //apply bindings values
-            controller._oneWayBinds().each(function() {
+            controller._oneWayBinds().each(function () {
                 var binding = this;
                 //get the element
                 var elem = $(binding);
@@ -463,6 +470,10 @@
         });
     });
 })(jQuery);
+
+/*
+ * This plugin is responsible for adding plugin functionality to jQuery.X
+ */
 
 (function ($) {
     $(function () {
@@ -548,6 +559,77 @@
                         }
                     });
                 }
+            }
+        });
+    });
+})(jQuery);
+
+/*
+ * This plugin is reponsible for adding debugging features to jQuery.X
+ */
+(function ($) {
+    $(function () {
+        $.x.extend.x('_debug', function () {
+            return false;
+        });
+
+        $.x.extend.x('debug', function () {
+            function display(consoles, pause) {
+                if (console && console.clear) {
+                    console.clear();
+                }
+                if (console && console.log) {
+                    $.each(consoles, function (i, output) {
+                        setTimeout(function () {
+                            console.log(output);
+                        }, pause * (i + 1));
+                    });
+                    setTimeout(function () {
+                        console.debug('Debugging Started Successfully!!');
+                        $.x._debug = true;
+                    }, pause * (consoles.length + 1));
+                }
+            }
+
+            return function () {
+                var consoles = [];
+
+                //show debugging message
+                var debugMessage = '\n' +
+                        '                ██╗  ██╗    ██████╗ ███████╗██████╗ ██╗   ██╗ ██████╗\n' +
+                        '                ╚██╗██╔╝    ██╔══██╗██╔════╝██╔══██╗██║   ██║██╔════╝\n' +
+                        '█████╗█████╗     ╚███╔╝     ██║  ██║█████╗  ██████╔╝██║   ██║██║  ███╗    █████╗█████╗\n' +
+                        '╚════╝╚════╝     ██╔██╗     ██║  ██║██╔══╝  ██╔══██╗██║   ██║██║   ██║    ╚════╝╚════╝ \n' +
+                        '                ██╔╝ ██╗    ██████╔╝███████╗██████╔╝╚██████╔╝╚██████╔╝ \n' +
+                        '                ╚═╝  ╚═╝    ╚═════╝ ╚══════╝╚═════╝  ╚═════╝  ╚═════╝';
+
+                consoles.push(debugMessage);
+
+                //check uninitialized controllers
+                var notControllers = [];
+                $('[data-x-controller]').each(function () {
+                    var controllerId = $(this).attr('data-x-controller');
+                    if (!$.x._controllers[controllerId]) {
+                        notControllers.push(controllerId);
+                    }
+                });
+                if (notControllers.length > 0) {
+                    consoles.push('----------------UNINITIALIZED CONTROLLERS----------------\n' + notControllers.join('\n'));
+                }
+
+                //display out errors
+                if ($.x._errors.length > 0) {
+                    consoles.push('----------------------ERROR LOG--------------------------\n' + $.x._errors.join('\n'));
+                }
+                display(consoles, 0);
+                return 'Starting X Debug...';
+            };
+        });
+
+        $.x.extend.apply(true, function (controller) {
+            if ($.x._debug && window.console && console.log) {
+                console.log('---------------"' + controller._id + '" CONTROLLER UPDATED----------------------');
+                console.log(controller);
             }
         });
     });

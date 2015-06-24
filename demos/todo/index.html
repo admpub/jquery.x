@@ -63,7 +63,6 @@
                             $element.append('<input type="text" class="text" data-x-bind="' + dataSource + '.newTodo" placeholder="New todo">');
                             $element.append('<ul></ul>');
                             controller.update(function () {
-                                console.log(controller);
                                 $element.find('ul').empty();
                                 if (controller.accessor(dataSource).todos.length > 0) {
                                     $.each(controller.accessor(dataSource).todos, function (index, todo) {
@@ -126,10 +125,6 @@
                             todos: [],
                             newTodo: ''
                         };
-
-                        controller.update(function () {
-                            console.log(controller);
-                        });
                     });
                 });
             })(jQuery);
