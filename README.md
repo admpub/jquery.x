@@ -275,6 +275,43 @@ Whenever the apply loop is invoked, all Apply Loop Extensions are run independen
 
         <div data-x-plugin="plugin1 plugin2"></div>
 
+## Debugging
+
+Debugging is a major issue most frameworks think about last. jQuery.X is big on debugging. In fact, we even built in a debugging mode that gives you all the information you need in one single call. `$.x.debug()` allows you to run the built in debugger in your console. If you run the debug method, you will see your console light up with all sorts of information that can help you actively debug your jQuery.X application. 
+
+**$.x.debug.error(index)**
+
+Once you run the `$.x.debug()` method you will find that there may be an Error Log. It may look like this:
+
+	======================ERROR LOG==========================
+	[0] - 1435241986934 - Extension ID must be a string
+	[1] - 1435241986935 - Extension factory must be a function
+	[2] - 1435241986937 - Extension ID must be a string
+	[3] - 1435241986937 - Extension factory must be a function
+	[4] - 1435241986939 - Apply function must be a function
+	[5] - 1435241986939 - Apply function must be a function
+	[6] - 1435241986940 - A controller ID is required
+	[7] - 1435241986940 - Controller binding could not be found
+	[8] - 1435241986941 - abc
+	[9] - 1435241986941 - Event ID must be a string
+	[10] - 1435241986941 - Event handler must be a function
+	[11] - 1435241986941 - Event ID must be a string
+	[12] - 1435241986942 - plugin name must be a string
+	[13] - 1435241986942 - plugin name must be a string
+	[14] - 1435241986942 - plugin initHandler must be a function
+	[15] - 1435241986944 - Property must be a string
+
+The numbers in the bracket `[]` indicate the index the error object lives at. If you want to get more information about a specific error you can simply run `$.x.debug.error(index)` where `index` matches the error number you want to get more information about.
+
+	"Error: plugin name must be a string
+	    at Object.x.error (http://localhost:8000/js/x.js:114:29)
+	    at Object.plugin (http://localhost:8000/js/extend/extensions/plugin.js:26:33)
+	    at Object.<anonymous> (http://localhost:8000/unit/unit.js:136:27)
+	    at Object.Test.run (http://localhost:8000/bower_components/qunit/qunit/qunit.js:790:18)
+	    at http://localhost:8000/bower_components/qunit/qunit/qunit.js:877:10
+	    at process (http://localhost:8000/bower_components/qunit/qunit/qunit.js:593:24)
+	    at http://localhost:8000/bower_components/qunit/qunit/qunit.js:182:5"
+
 ## Library API Documentation
 
 * **$.x.broadcast(eventId[, param])** This method is used to broadcast an event that occured. The event will be identified by the `eventId` it was given. You may also pass data into the function handling the event.
