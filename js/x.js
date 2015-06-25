@@ -28,6 +28,7 @@
             },
             _controllers: {},
             _errors: [],
+            _debug: false,
             extend: {
                 x: function (extensionId, extensionFactory) {
                     if ($.type(extensionId) !== $.x.type.string || !extensionId) {
@@ -109,6 +110,8 @@
                 return false;
             },
             error: function (message) {
+                var msg = (message) ? message : 'No Error Message';
+                var error = new Error(msg);
                 var errorHeading = '' +
                         '                ██╗  ██╗    ███████╗██████╗ ██████╗  ██████╗ ██████╗ ██╗ \n' +
                         '                ╚██╗██╔╝    ██╔════╝██╔══██╗██╔══██╗██╔═══██╗██╔══██╗██║ \n' +
@@ -116,14 +119,22 @@
                         '╚════╝╚════╝     ██╔██╗     ██╔══╝  ██╔══██╗██╔══██╗██║   ██║██╔══██╗╚═╝    ╚════╝╚════╝ \n' +
                         '                ██╔╝ ██╗    ███████╗██║  ██║██║  ██║╚██████╔╝██║  ██║██╗ \n' +
                         '                ╚═╝  ╚═╝    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝ \n';
-                if (window.console && console.debug) {
-                    console.debug(errorHeading);
+
+                if (this._debug) {
+                    if (window.console && console.debug) {
+                        console.debug(errorHeading);
+                    }
+
+                    if (window.console && console.log) {
+                        console.log(error.stack);
+                    }
                 }
-                var error = new Error(message);
-                if (window.console && console.log) {
-                    console.log(error.stack);
-                }
-                this._errors.push((Date.now()).toString() + ': ' + message);
+
+                this._errors.push({
+                    timestamp: (Date.now()).toString(),
+                    message: msg,
+                    error: error
+                });
                 return error;
             }
         };

@@ -3,10 +3,7 @@
  */
 (function ($) {
     $(function () {
-        $.x.extend.x('_debug', function () {
-            return false;
-        });
-
+        //create function for turning on debugging
         $.x.extend.x('debug', function () {
             function display(consoles, pause) {
                 if (console && console.clear) {
@@ -19,15 +16,16 @@
                         }, pause * (i + 1));
                     });
                     setTimeout(function () {
-                        console.debug('Debugging Started Successfully!!');
-                        $.x._debug = true;
+                        if (!$.x._debug) {
+                            console.debug('Debugging Started Successfully!!');
+                            $.x._debug = true;
+                        }
                     }, pause * (consoles.length + 1));
                 }
             }
 
-            return function () {
+            var debug = function () {
                 var consoles = [];
-
                 //show debugging message
                 var debugMessage = '\n' +
                         '                ██╗  ██╗    ██████╗ ███████╗██████╗ ██╗   ██╗ ██████╗\n' +
@@ -48,16 +46,29 @@
                     }
                 });
                 if (notControllers.length > 0) {
-                    consoles.push('----------------UNINITIALIZED CONTROLLERS----------------\n' + notControllers.join('\n'));
+                    consoles.push('================UNINITIALIZED CONTROLLERS================\n' + notControllers.join('\n'));
                 }
 
                 //display out errors
+                var errorLog = '';
                 if ($.x._errors.length > 0) {
-                    consoles.push('----------------------ERROR LOG--------------------------\n' + $.x._errors.join('\n'));
+                    $.each($.x._errors, function (i, error) {
+                        errorLog += '[' + i + '] - ' + error.timestamp + ' - ' + error.message + '\n';
+                    });
+                    consoles.push('======================ERROR LOG==========================\n' + errorLog);
                 }
                 display(consoles, 0);
                 return 'Starting X Debug...';
             };
+
+            debug.error = function (index) {
+                if (index) {
+                    return $.x._errors[index].error.stack;
+                }
+                return $.x._errors;
+            };
+
+            return debug;
         });
 
         $.x.extend.apply(true, function (controller) {

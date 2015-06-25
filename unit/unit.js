@@ -97,7 +97,7 @@
          * $.x.error() Throws an error and debugs in the console
          */
         qunit.test('$.x.error(message)', function(assert) {
-            assert.ok($.x.error() instanceof Error, 'Throws Error Check');
+            assert.ok($.x.error('abc') instanceof Error, 'Throws Error Check');
         });
 
         /*
